@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/labstack/echo/v4"
-	model "github.com/son1122/assessment-tax/model"
+	"github.com/son1122/assessment-tax/model"
 	struc "github.com/son1122/assessment-tax/struct"
 	"net/http"
 )
@@ -43,8 +43,8 @@ func TaxCalculationFromTotalIncome(totalIncome float64) ([]taxLevelData, float64
 	}
 	//log.Printf(string(tax))
 	data := []taxLevelData{
-		taxLevelData{Level: "0-150,000", Tax: 0},
-		taxLevelData{Level: "0-150,001", Tax: 500},
+		{Level: "0-150,000", Tax: 0},
+		{Level: "0-150,001", Tax: 500},
 	}
 	return data, tax
 
@@ -65,10 +65,24 @@ func TaxCalculationPost(c echo.Context) error {
 	if err := c.Validate(tax); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+	donation := 0.0
+	for i := 0; i < len(tax.Allowances); i++ {
+		if tax.Allowances[i].AllowanceType == "donation" {
+			donation += tax.Allowances[i].Amount
+		}
+	}
 	personalDeduct, _ := model.GetPersonalDeduct()
 	incomeDeductPersonal := tax.TotalIncome - personalDeduct
-	_, taxCost := TaxCalculationFromTotalIncome(incomeDeductPersonal)
+	maxDonationDeduct, _ := model.GetDonationDeduct()
+	incomeDeductDonation := incomeDeductPersonal
+	if donation >= maxDonationDeduct {
+		incomeDeductDonation = incomeDeductPersonal - maxDonationDeduct
+	} else {
+		incomeDeductDonation = incomeDeductPersonal - donation
+	}
+	_, taxCost := TaxCalculationFromTotalIncome(incomeDeductDonation)
 	taxCost -= tax.Wht
+
 	taxResponse := struc.TaxResponse{Tax: taxCost}
 
 	return c.JSON(http.StatusOK, taxResponse)

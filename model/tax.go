@@ -5,6 +5,14 @@ import (
 	"log"
 )
 
+func GetDonationDeduct() (float64, error) {
+
+	var donationDeduct GetDonationDeductStruct
+	err := db.DB.QueryRow(`SELECT donation_deduct,donation_id,is_active,create_at FROM public."master_donation_deduct" WHERE is_active = TRUE`).Scan(&donationDeduct.DonationDeduct, &donationDeduct.id, &donationDeduct.is_active, &donationDeduct.create_at)
+
+	return donationDeduct.DonationDeduct, err
+}
+
 // GetPersonalDeduct query personal deduct from database
 func GetPersonalDeduct() (float64, error) {
 
