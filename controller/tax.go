@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/labstack/echo/v4"
 	model "github.com/son1122/assessment-tax/model"
+	struc "github.com/son1122/assessment-tax/struct"
 	"net/http"
 )
 
@@ -13,7 +14,6 @@ type taxLevelData struct {
 
 func TaxCalculationFromTotalIncome(totalIncome float64) ([]taxLevelData, float64) {
 
-	totalIncome = 5000000
 	taxLevel, _ := model.GetTaxLevel()
 	var tax float64 = 0
 	var taxValueInLevel float64 = 0
@@ -58,8 +58,17 @@ func TaxCalculationFromTotalIncome(totalIncome float64) ([]taxLevelData, float64
 // @Success 200 {string} string "ok"
 // @Router /tax/calculations [post]
 func TaxCalculationPost(c echo.Context) error {
-	_, tax := TaxCalculationFromTotalIncome(123.55)
-	//data, _ := model.GetPersonalDeduct()
-	//data, _ := model.GetTaxLevel()
-	return c.JSON(http.StatusOK, tax)
+	var tax struc.TaxStruct
+	if err := c.Bind(&tax); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
+	}
+	if err := c.Validate(tax); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	personalDeduct, _ := model.GetPersonalDeduct()
+	incomeDeductPersonal := tax.TotalIncome - personalDeduct
+	_, taxCost := TaxCalculationFromTotalIncome(incomeDeductPersonal)
+	taxResponse := struc.TaxResponse{Tax: taxCost}
+
+	return c.JSON(http.StatusOK, taxResponse)
 }

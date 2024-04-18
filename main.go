@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"github.com/son1122/assessment-tax/db"
 	"github.com/son1122/assessment-tax/router"
+	util "github.com/son1122/assessment-tax/util"
 	echoswagger "github.com/swaggo/echo-swagger"
 	"net/http"
 	"os"
@@ -45,7 +47,7 @@ func main() {
 	e.GET("/health", func(c echo.Context) error {
 		return c.String(http.StatusOK, "healthy")
 	})
-
+	e.Validator = &util.CustomValidator{Validator: validator.New()}
 	go func() {
 		if err := e.Start(":" + PORT); err != nil && err != http.ErrServerClosed { // Start server
 			e.Logger.Fatal("shutting down the server")
