@@ -1,22 +1,22 @@
 package main
 
 import (
+	"context"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 	"github.com/son1122/assessment-tax/db"
 	"github.com/son1122/assessment-tax/router"
 	echoswagger "github.com/swaggo/echo-swagger"
 	"net/http"
 	"os"
+	"os/signal"
+	"time"
 )
 
 func main() {
-	//e := echo.New()
-	//e.GET("/", func(c echo.Context) error {
-	//	return c.String(http.StatusOK, "Hello, Go Bootcamp!")
-	//})
-	//e.Logger.Fatal(e.Start(":1323"))
 
 	e := echo.New()
+	e.Logger.SetLevel(log.INFO)
 
 	// Use environment variables for database connection
 	DATABASE_URL := os.Getenv("DATABASE_URL")
@@ -46,7 +46,19 @@ func main() {
 		return c.String(http.StatusOK, "healthy")
 	})
 
-	// Use environment variable for the server port
+	go func() {
+		if err := e.Start(":" + PORT); err != nil && err != http.ErrServerClosed { // Start server
+			e.Logger.Fatal("shutting down the server")
+		}
+	}()
 
-	e.Logger.Fatal(e.Start(":" + PORT))
+	shutdown := make(chan os.Signal, 1)
+	signal.Notify(shutdown, os.Interrupt)
+	<-shutdown
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
+
 }
