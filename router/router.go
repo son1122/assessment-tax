@@ -8,5 +8,6 @@ import (
 func InitRoutes(e *echo.Echo) {
 	//user
 	e.GET("/users", controller.GetUsers)
+	e.POST("/tax/calculations", controller.TaxCalculation)
 
 }
