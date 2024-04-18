@@ -68,6 +68,7 @@ func TaxCalculationPost(c echo.Context) error {
 	personalDeduct, _ := model.GetPersonalDeduct()
 	incomeDeductPersonal := tax.TotalIncome - personalDeduct
 	_, taxCost := TaxCalculationFromTotalIncome(incomeDeductPersonal)
+	taxCost -= tax.Wht
 	taxResponse := struc.TaxResponse{Tax: taxCost}
 
 	return c.JSON(http.StatusOK, taxResponse)
