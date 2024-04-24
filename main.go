@@ -2,16 +2,19 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"github.com/son1122/assessment-tax/db"
+	_ "github.com/son1122/assessment-tax/docs"
 	"github.com/son1122/assessment-tax/router"
-	util "github.com/son1122/assessment-tax/util"
+	"github.com/son1122/assessment-tax/util"
 	echoswagger "github.com/swaggo/echo-swagger"
 	"net/http"
 	"os"
 	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -40,6 +43,13 @@ func main() {
 
 	db.InitDB(DATABASE_URL)
 
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			c.Set("db", db.DB)
+			return next(c)
+		}
+	})
+
 	router.InitRoutes(e)
 
 	e.GET("/swagger/*", echoswagger.WrapHandler)
@@ -49,18 +59,21 @@ func main() {
 	})
 	e.Validator = &util.CustomValidator{Validator: validator.New()}
 	go func() {
-		if err := e.Start(":" + PORT); err != nil && err != http.ErrServerClosed { // Start server
-			e.Logger.Fatal("shutting down the server")
+		if err := e.Start(":" + PORT); err != nil && err != http.ErrServerClosed {
+			e.Logger.Fatal("shutting down the server: ", err)
 		}
 	}()
 
-	shutdown := make(chan os.Signal, 1)
-	signal.Notify(shutdown, os.Interrupt)
-	<-shutdown
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+	<-quit
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	if err := e.Shutdown(ctx); err != nil {
-		e.Logger.Fatal(err)
+		e.Logger.Fatal("error shutting down the server: ", err)
 	}
+	e.Logger.Info("Server gracefully stopped")
+	fmt.Println("shutting down the server")
 
 }

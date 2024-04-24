@@ -8,6 +8,9 @@ import (
 
 var DB *sql.DB
 
+func SetDB(database *sql.DB) {
+	DB = database
+}
 func InitDB(dataSourceName string) {
 	var err error
 	DB, err = sql.Open("postgres", dataSourceName)
