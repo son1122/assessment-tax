@@ -29,7 +29,13 @@ func TaxCalculationPost(c echo.Context) error {
 	personalDeduct, _ := model.GetPersonalDeduct()
 	incomeDeductPersonal := tax.TotalIncome - personalDeduct
 	_, taxCost := util.TaxCalculationFromTotalIncome(incomeDeductPersonal)
-	taxResponse := struc.TaxResponse{Tax: taxCost}
+	finalTax := taxCost - tax.Wht
+	if finalTax >= 0 {
+		taxResponse := struc.TaxResponse{Tax: finalTax}
+		return c.JSON(http.StatusOK, taxResponse)
+	} else {
+		taxResponse := struc.TaxResponse{TaxRefund: finalTax}
+		return c.JSON(http.StatusOK, taxResponse)
+	}
 
-	return c.JSON(http.StatusOK, taxResponse)
 }
