@@ -26,9 +26,20 @@ func TaxCalculationPost(c echo.Context) error {
 	if err := c.Validate(tax); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+	totalDonationAllowance := 0.0
+	for _, allowance := range tax.Allowances {
+		totalDonationAllowance += allowance.Amount
+	}
+
 	personalDeduct, _ := model.GetPersonalDeduct()
+	donationDeduct, _ := model.GetDonationDeduct()
 	incomeDeductPersonal := tax.TotalIncome - personalDeduct
-	_, taxCost := util.TaxCalculationFromTotalIncome(incomeDeductPersonal)
+
+	if totalDonationAllowance > donationDeduct {
+		totalDonationAllowance = donationDeduct
+	}
+	incomeDeductDonation := incomeDeductPersonal - totalDonationAllowance
+	_, taxCost := util.TaxCalculationFromTotalIncome(incomeDeductDonation)
 	finalTax := taxCost - tax.Wht
 	if finalTax >= 0 {
 		taxResponse := struc.TaxResponse{Tax: finalTax}
