@@ -1,4 +1,4 @@
-package model
+package structs
 
 type TaxLevel struct {
 	ID       int
