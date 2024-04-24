@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/son1122/assessment-tax/model"
-	struc "github.com/son1122/assessment-tax/struct"
+	struc "github.com/son1122/assessment-tax/structs"
 	"github.com/son1122/assessment-tax/util"
 	"net/http"
 )
