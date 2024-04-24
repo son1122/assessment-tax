@@ -1,0 +1,60 @@
+definitions:
+  _struct.AllowanceStruct:
+    properties:
+      allowanceType:
+        enum:
+          - donation
+          - k-receipt
+        type: string
+      amount:
+        minimum: 0
+        type: number
+    type: object
+  _struct.TaxResponse:
+    properties:
+      tax:
+        type: number
+    type: object
+  _struct.TaxStruct:
+    properties:
+      allowances:
+        items:
+          $ref: '#/definitions/_struct.AllowanceStruct'
+        type: array
+      totalIncome:
+        minimum: 0
+        type: number
+      wht:
+        minimum: 0
+        type: number
+    type: object
+info:
+  contact: { }
+paths:
+  /tax/calculations:
+    post:
+      consumes:
+        - application/json
+      description: Calculates taxes based on total income, withholding tax, and allowances.
+      parameters:
+        - description: Tax Calculation Request
+          in: body
+          name: tax_body
+          required: true
+          schema:
+            $ref: '#/definitions/_struct.TaxStruct'
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Returns the calculated tax amount
+          schema:
+            $ref: '#/definitions/_struct.TaxResponse'
+        "400":
+          description: Invalid input parameters
+          schema:
+            type: string
+      summary: Calculate taxes
+      tags:
+        - tax
+swagger: "2.0"

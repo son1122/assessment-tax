@@ -3,59 +3,20 @@ package controller
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/son1122/assessment-tax/model"
-	struc "github.com/son1122/assessment-tax/struct"
+	struc "github.com/son1122/assessment-tax/structs"
+	"github.com/son1122/assessment-tax/util"
 	"net/http"
 )
 
-type taxLevelData struct {
-	Level string  `json:"level"`
-	Tax   float64 `json:"tax"`
-}
-
-func TaxCalculationFromTotalIncome(totalIncome float64) ([]taxLevelData, float64) {
-
-	taxLevel, _ := model.GetTaxLevel()
-	var tax float64 = 0
-	var taxValueInLevel float64 = 0
-	//var sum float64 = 0
-	for i := 0; i < len(taxLevel); i++ {
-		if i == len(taxLevel)-1 {
-			taxValueInLevel = totalIncome - float64(taxLevel[i].Floor)
-			tax = tax + taxValueInLevel*float64(taxLevel[i].TaxValue)/100
-			break
-		}
-		if totalIncome >= float64(taxLevel[i].Ceil) {
-			if i > 0 {
-				tax = tax + (float64(taxLevel[i].TaxValue) * (float64(taxLevel[i].Ceil) - float64(taxLevel[i-1].Ceil)) / 100)
-			} else {
-				tax = tax + (float64(taxLevel[i].TaxValue) * (float64(taxLevel[i].Ceil)) / 100)
-			}
-
-		} else {
-			if totalIncome <= float64(taxLevel[i].Floor) {
-				break
-			}
-			taxValueInLevel = totalIncome - float64(taxLevel[i].Floor)
-			tax = tax + taxValueInLevel*float64(taxLevel[i].TaxValue)/100
-			break
-		}
-
-	}
-	//log.Printf(string(tax))
-	data := []taxLevelData{
-		{Level: "0-150,000", Tax: 0},
-		{Level: "0-150,001", Tax: 500},
-	}
-	return data, tax
-
-}
-
-// TaxCalculationPost handles the POST tax/calculations route
-// @Summary tax/calculations
-// @Description tax/calculations by data
+// TaxCalculationPost handles the POST /tax/calculations route
+// @Summary Calculate taxes
+// @Description Calculates taxes based on total income, withholding tax, and allowances.
+// @Tags tax
 // @Accept  json
 // @Produce  json
-// @Success 200 {string} string "ok"
+// @Param   tax_body  body      _struct.TaxStruct  true  "Tax Calculation Request"
+// @Success 200 {object} _struct.TaxResponse  "Returns the calculated tax amount"
+// @Failure 400 {string} string "Invalid input parameters"
 // @Router /tax/calculations [post]
 func TaxCalculationPost(c echo.Context) error {
 	var tax struc.TaxStruct
@@ -65,25 +26,16 @@ func TaxCalculationPost(c echo.Context) error {
 	if err := c.Validate(tax); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	donation := 0.0
-	for i := 0; i < len(tax.Allowances); i++ {
-		if tax.Allowances[i].AllowanceType == "donation" {
-			donation += tax.Allowances[i].Amount
-		}
-	}
 	personalDeduct, _ := model.GetPersonalDeduct()
 	incomeDeductPersonal := tax.TotalIncome - personalDeduct
-	maxDonationDeduct, _ := model.GetDonationDeduct()
-	incomeDeductDonation := incomeDeductPersonal
-	if donation >= maxDonationDeduct {
-		incomeDeductDonation = incomeDeductPersonal - maxDonationDeduct
+	_, taxCost := util.TaxCalculationFromTotalIncome(incomeDeductPersonal)
+	finalTax := taxCost - tax.Wht
+	if finalTax >= 0 {
+		taxResponse := struc.TaxResponse{Tax: finalTax}
+		return c.JSON(http.StatusOK, taxResponse)
 	} else {
-		incomeDeductDonation = incomeDeductPersonal - donation
+		taxResponse := struc.TaxResponse{TaxRefund: finalTax}
+		return c.JSON(http.StatusOK, taxResponse)
 	}
-	_, taxCost := TaxCalculationFromTotalIncome(incomeDeductDonation)
-	taxCost -= tax.Wht
 
-	taxResponse := struc.TaxResponse{Tax: taxCost}
-
-	return c.JSON(http.StatusOK, taxResponse)
 }

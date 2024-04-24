@@ -1,4 +1,4 @@
-package _struct
+package structs
 
 type TaxStruct struct {
 	TotalIncome float64           `json:"totalIncome" validate:"gte=0"`

@@ -1,0 +1,93 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "contact": {}
+  },
+  "paths": {
+    "/tax/calculations": {
+      "post": {
+        "description": "Calculates taxes based on total income, withholding tax, and allowances.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "tax"
+        ],
+        "summary": "Calculate taxes",
+        "parameters": [
+          {
+            "description": "Tax Calculation Request",
+            "name": "tax_body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/_struct.TaxStruct"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the calculated tax amount",
+            "schema": {
+              "$ref": "#/definitions/_struct.TaxResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid input parameters",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "_struct.AllowanceStruct": {
+      "type": "object",
+      "properties": {
+        "allowanceType": {
+          "type": "string",
+          "enum": [
+            "donation",
+            "k-receipt"
+          ]
+        },
+        "amount": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "_struct.TaxResponse": {
+      "type": "object",
+      "properties": {
+        "tax": {
+          "type": "number"
+        }
+      }
+    },
+    "_struct.TaxStruct": {
+      "type": "object",
+      "properties": {
+        "allowances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/_struct.AllowanceStruct"
+          }
+        },
+        "totalIncome": {
+          "type": "number",
+          "minimum": 0
+        },
+        "wht": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}
