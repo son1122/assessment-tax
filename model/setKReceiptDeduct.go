@@ -17,14 +17,14 @@ func SetKReceiptDeduct(kReceiptDeduct float64) (float64, error) {
 
 	// Select the current active record
 	var donationDeduct structs.GetTaxDeductStruct
-	err = tx.QueryRow(`SELECT amount_deduct, id, is_active, create_at, version FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'donation'`).Scan(&donationDeduct.PersonalDeduct, &donationDeduct.Id, &donationDeduct.Is_active, &donationDeduct.Create_at, &donationDeduct.Version)
+	err = tx.QueryRow(`SELECT amount_deduct, id, is_active, create_at, version FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'k-receipt'`).Scan(&donationDeduct.PersonalDeduct, &donationDeduct.Id, &donationDeduct.Is_active, &donationDeduct.Create_at, &donationDeduct.Version)
 	if err != nil {
 		tx.Rollback()
 		return 0, err
 	}
 
 	maxKReceipt, _ := GetMaxKReceiptDeduct()
-	floorKReceipt, _ := GetKReceiptDeduct()
+	floorKReceipt, _ := GetFloorKReceiptDeduct()
 	if kReceiptDeduct > maxKReceipt || kReceiptDeduct < floorKReceipt {
 		return donationDeduct.PersonalDeduct, errors.New("donation is not in maximum or minimum range")
 	}
@@ -38,7 +38,7 @@ func SetKReceiptDeduct(kReceiptDeduct float64) (float64, error) {
 
 	// Insert a new record with an incremented version and is_active = TRUE
 	newVersion := donationDeduct.Version + 1
-	_, err = tx.Exec(`INSERT INTO public."master_deduct" (amount_deduct, is_active, type_deduct, version) VALUES ($1, $2 , 'donation', $3)`, kReceiptDeduct, true, newVersion)
+	_, err = tx.Exec(`INSERT INTO public."master_deduct" (amount_deduct, is_active, type_deduct, version) VALUES ($1, $2 , 'k-receipt', $3)`, kReceiptDeduct, true, newVersion)
 	if err != nil {
 		tx.Rollback()
 		return 0, err

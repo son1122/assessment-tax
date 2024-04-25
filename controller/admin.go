@@ -26,13 +26,19 @@ func AdminDeductionPersonalAdjust(c echo.Context) error {
 	if err := c.Validate(amount); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	setDonationResult, err := model.SetDonationDeduct(amount.Amount)
+	setPersonalResult, err := model.SetPersonalDeduct(amount.Amount)
 
+	if err != nil && setPersonalResult != 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 	if err != nil {
-		return c.JSON(http.StatusOK, err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	if setPersonalResult == 0 {
+		return c.JSON(http.StatusOK, map[string]int{"personalDeduction": 0})
 	}
 	response := struc.AdminResponseStruct{
-		Donation: setDonationResult,
+		PersonalDeduction: setPersonalResult,
 	}
 	return c.JSON(http.StatusOK, response)
 
@@ -57,13 +63,20 @@ func AdminDeductionKReceiptAdjust(c echo.Context) error {
 	if err := c.Validate(amount); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	setDonationResult, err := model.SetDonationDeduct(amount.Amount)
 
+	setKReceiptResult, err := model.SetKReceiptDeduct(amount.Amount)
+
+	if err != nil && setKReceiptResult != 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 	if err != nil {
-		return c.JSON(http.StatusOK, err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	if setKReceiptResult == 0 {
+		return c.JSON(http.StatusOK, map[string]int{"kReceipt": 0})
 	}
 	response := struc.AdminResponseStruct{
-		Donation: setDonationResult,
+		KReceipt: setKReceiptResult,
 	}
 	return c.JSON(http.StatusOK, response)
 
@@ -90,8 +103,14 @@ func AdminDeductionDonationAdjust(c echo.Context) error {
 	}
 	setDonationResult, err := model.SetDonationDeduct(amount.Amount)
 
+	if err != nil && setDonationResult != 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 	if err != nil {
-		return c.JSON(http.StatusOK, err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	if setDonationResult == 0 {
+		return c.JSON(http.StatusOK, map[string]int{"donationDeduction": 0})
 	}
 	response := struc.AdminResponseStruct{
 		Donation: setDonationResult,

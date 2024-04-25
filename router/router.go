@@ -15,7 +15,7 @@ func InitRoutes(e *echo.Echo) {
 	//AdminCalculation Controller
 	adminGroup := e.Group("/admin")
 	adminGroup.Use(middleware.BasicAuthMiddleware)
-	adminGroup.POST("/deductions/personal", controller.AdminDeductionPersonalAdjust)
 	adminGroup.POST("/deductions/k-receipt", controller.AdminDeductionKReceiptAdjust)
 	adminGroup.POST("/deductions/donation", controller.AdminDeductionDonationAdjust)
+	adminGroup.POST("/deductions/personal", controller.AdminDeductionPersonalAdjust)
 }
