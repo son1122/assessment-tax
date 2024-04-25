@@ -7,6 +7,8 @@ import (
 	struc "github.com/son1122/assessment-tax/structs"
 	"github.com/son1122/assessment-tax/util"
 	"io"
+	"math"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 )
@@ -72,7 +74,7 @@ func TaxCalculationPost(c echo.Context) error {
 		taxResponse := struc.TaxResponse{Tax: finalTax, TaxLevel: taxLevelData}
 		return c.JSON(http.StatusOK, taxResponse)
 	} else {
-		taxResponse := struc.TaxResponse{TaxRefund: finalTax, TaxLevel: taxLevelData}
+		taxResponse := struc.TaxResponse{TaxRefund: math.Abs(finalTax), TaxLevel: taxLevelData}
 		return c.JSON(http.StatusOK, taxResponse)
 	}
 
@@ -99,7 +101,13 @@ func TaxCalculationCSVPost(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	defer src.Close()
+	defer func(src multipart.File) error {
+		err := src.Close()
+		if err != nil {
+			return err
+		}
+		return nil
+	}(src)
 
 	reader := csv.NewReader(src)
 	var taxes []struc.TaxResponseCSVDataStruct
@@ -129,13 +137,23 @@ func TaxCalculationCSVPost(c echo.Context) error {
 		totalIncomeDeductDonation := totalIncomeDeductPersonal - donation
 		_, tax := util.TaxCalculationFromTotalIncome(totalIncomeDeductDonation)
 		finalTax := tax - wht
-		taxes = append(
-			taxes,
-			struc.TaxResponseCSVDataStruct{
-				TotalIncome: totalIncome,
-				Tax:         finalTax,
-			},
-		)
+		if finalTax >= 0 {
+			taxes = append(
+				taxes,
+				struc.TaxResponseCSVDataStruct{
+					TotalIncome: totalIncome,
+					Tax:         finalTax,
+				},
+			)
+		} else {
+			taxes = append(
+				taxes,
+				struc.TaxResponseCSVDataStruct{
+					TotalIncome: totalIncome,
+					TaxRefund:   math.Abs(finalTax),
+				},
+			)
+		}
 
 		loopNumber += 1
 	}
