@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 	"github.com/son1122/assessment-tax/constant"
 	"github.com/son1122/assessment-tax/db"
@@ -28,7 +29,8 @@ func main() {
 	cfg := constant.Get()
 
 	db.InitDB(cfg.DatabaseURL)
-
+	e.Use(middleware.CORS())
+	e.Use(middleware.Logger())
 	router.InitRoutes(e)
 
 	e.GET("/swagger/*", echoswagger.WrapHandler)
