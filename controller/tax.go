@@ -23,26 +23,50 @@ import (
 // @Router /tax/calculations [post]
 func TaxCalculationPost(c echo.Context) error {
 	var tax struc.TaxStruct
-	if err := c.Bind(&tax); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
+	err := c.Bind(&tax)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
 	}
-	if err := c.Validate(tax); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	err = c.Validate(tax)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
 	}
-	totalDonationAllowance := 0.0
-	for _, allowance := range tax.Allowances {
-		totalDonationAllowance += allowance.Amount
+	deductTypeAndAmount, err := model.GetDeductType()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
 	}
 
-	personalDeduct, _ := model.GetPersonalDeduct()
-	donationDeduct, _ := model.GetDonationDeduct()
+	totalAllowance := 0.0
+
+	for _, typeDeduct := range tax.Allowances {
+		deductTypeAndAmount[typeDeduct.AllowanceType] += typeDeduct.Amount
+		totalAllowance += typeDeduct.Amount
+	}
+
+	personalDeduct, err := model.GetPersonalDeduct()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	donationDeduct, err := model.GetDonationDeduct()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	kReceiptDeduct, err := model.GetKReceiptDeduct()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	if donationDeduct < deductTypeAndAmount["donation"] {
+		deductTypeAndAmount["donation"] = donationDeduct
+	}
+	if kReceiptDeduct < deductTypeAndAmount["k-receipt"] {
+		deductTypeAndAmount["k-receipt"] = kReceiptDeduct
+	}
 	incomeDeductPersonal := tax.TotalIncome - personalDeduct
-
-	if totalDonationAllowance > donationDeduct {
-		totalDonationAllowance = donationDeduct
-	}
-	incomeDeductDonation := incomeDeductPersonal - totalDonationAllowance
-	taxLevelData, taxCost := util.TaxCalculationFromTotalIncome(incomeDeductDonation)
+	incomeDeductDonation := incomeDeductPersonal - deductTypeAndAmount["donation"]
+	incomeDeductKreceipt := incomeDeductDonation - deductTypeAndAmount["k-receipt"]
+	taxLevelData, taxCost := util.TaxCalculationFromTotalIncome(incomeDeductKreceipt)
 	finalTax := taxCost - tax.Wht
 	if finalTax >= 0 {
 		taxResponse := struc.TaxResponse{Tax: finalTax, TaxLevel: taxLevelData}

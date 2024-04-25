@@ -10,7 +10,6 @@ type TaxLevel struct {
 
 // TaxLevelData Tax Level Struct for get tax level from database table master_tax_level
 type TaxLevelData struct {
-	Level     string  `json:"level"`
-	Tax       float64 `json:"tax,omitempty"`
-	TaxRefund float64 `json:"taxRefund,omitempty"`
+	Level string  `json:"level"`
+	Tax   float64 `json:"tax"`
 }

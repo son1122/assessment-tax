@@ -6,4 +6,5 @@ type GetTaxDeductStruct struct {
 	Is_active      bool
 	Create_at      string
 	Version        int
+	Type           string
 }
