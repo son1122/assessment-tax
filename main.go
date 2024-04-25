@@ -31,6 +31,8 @@ func main() {
 	db.InitDB(cfg.DatabaseURL)
 	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
+	e.Use(middleware.Secure())
+	e.Use(middleware.Recover())
 	router.InitRoutes(e)
 
 	e.GET("/swagger/*", echoswagger.WrapHandler)

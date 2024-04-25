@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/son1122/assessment-tax/model"
 	struc "github.com/son1122/assessment-tax/structs"
+	"log"
 	"net/http"
 )
 
@@ -56,28 +57,35 @@ func AdminDeductionPersonalAdjust(c echo.Context) error {
 // @Router /tax/calculations [post]
 
 func AdminDeductionKReceiptAdjust(c echo.Context) error {
+	log.Println("start AdminDeductionKReceiptAdjust")
 	var amount struc.AdminRequestStruct
 	if err := c.Bind(&amount); err != nil {
+		log.Println(err)
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
 	}
 	if err := c.Validate(amount); err != nil {
+		log.Println(err)
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	setKReceiptResult, err := model.SetKReceiptDeduct(amount.Amount)
 
 	if err != nil && setKReceiptResult != 0 {
+		log.Println(err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	if err != nil {
+		log.Println(err.Error())
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	if setKReceiptResult == 0 {
+		log.Println(map[string]int{"kReceipt": 0})
 		return c.JSON(http.StatusOK, map[string]int{"kReceipt": 0})
 	}
 	response := struc.AdminResponseStruct{
 		KReceipt: setKReceiptResult,
 	}
+	log.Println(response)
 	return c.JSON(http.StatusOK, response)
 
 }
@@ -94,6 +102,7 @@ func AdminDeductionKReceiptAdjust(c echo.Context) error {
 // @Router /tax/calculations [post]
 
 func AdminDeductionDonationAdjust(c echo.Context) error {
+	log.Println("start AdminDeductionDonationAdjust")
 	var amount struc.AdminRequestStruct
 	if err := c.Bind(&amount); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
