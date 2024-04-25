@@ -23,8 +23,8 @@ func SetPersonalDeduct(kReceiptDeduct float64) (float64, error) {
 		return 0, err
 	}
 
-	maxKReceipt, _ := GetMaxKReceiptDeduct()
-	floorKReceipt, _ := GetFloorKReceiptDeduct()
+	maxKReceipt, _ := GetMaxPersonalDeduct()
+	floorKReceipt, _ := GetFloorPersonalDeduct()
 	if kReceiptDeduct > maxKReceipt || kReceiptDeduct < floorKReceipt {
 		return donationDeduct.PersonalDeduct, errors.New("donation is not in maximum or minimum range")
 	}
