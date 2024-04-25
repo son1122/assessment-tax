@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"github.com/son1122/assessment-tax/model"
 	"github.com/son1122/assessment-tax/structs"
 )
@@ -8,38 +9,68 @@ import (
 // TaxCalculationFromTotalIncome Function for calculate tax from total income by using Tax Level From Database from model.GetTaxLevel()
 func TaxCalculationFromTotalIncome(income float64) ([]structs.TaxLevelData, float64) {
 
+	data := []structs.TaxLevelData{}
+
 	taxLevel, _ := model.GetTaxLevel()
 	var tax float64 = 0
-	var taxValueInLevel float64 = 0
+	var incomeValueInLevel float64 = 0
 	//var sum float64 = 0
 	for i := 0; i < len(taxLevel); i++ {
 		if i == len(taxLevel)-1 {
-			taxValueInLevel = income - float64(taxLevel[i].Floor)
-			tax = tax + taxValueInLevel*float64(taxLevel[i].TaxValue)/100
+			if income >= float64(taxLevel[i].Floor) {
+				incomeValueInLevel = income - float64(taxLevel[i].Floor)
+				taxValueInLevel := incomeValueInLevel * float64(taxLevel[i].TaxValue) / 100
+				tax = tax + taxValueInLevel
+				data = append(data, structs.TaxLevelData{
+					Level: fmt.Sprintf("%d - ขึ้นไป", taxLevel[i].Floor),
+					Tax:   taxValueInLevel,
+				})
+				break
+			}
+			data = append(data, structs.TaxLevelData{
+				Level: fmt.Sprintf("%d - ขึ้นไป", taxLevel[i].Floor),
+				Tax:   0,
+			})
 			break
 		}
 		if income >= float64(taxLevel[i].Ceil) {
 			if i > 0 {
-				tax = tax + (float64(taxLevel[i].TaxValue) * (float64(taxLevel[i].Ceil) - float64(taxLevel[i-1].Ceil)) / 100)
+				taxValueInLevel := float64(taxLevel[i].TaxValue) * (float64(taxLevel[i].Ceil) - float64(taxLevel[i-1].Ceil)) / 100
+				tax = tax + taxValueInLevel
+				data = append(data, structs.TaxLevelData{
+					Level: fmt.Sprintf("%d - %d", taxLevel[i].Floor, taxLevel[i].Ceil),
+					Tax:   taxValueInLevel,
+				})
 			} else {
-				tax = tax + (float64(taxLevel[i].TaxValue) * (float64(taxLevel[i].Ceil)) / 100)
+				taxValueInLevel := float64(taxLevel[i].TaxValue) * (float64(taxLevel[i].Ceil)) / 100
+				tax = tax + taxValueInLevel
+				data = append(data, structs.TaxLevelData{
+					Level: fmt.Sprintf("%d - %d", taxLevel[i].Floor, taxLevel[i].Ceil),
+					Tax:   taxValueInLevel,
+				})
 			}
 
 		} else {
 			if income <= float64(taxLevel[i].Floor) {
-				break
+				data = append(data, structs.TaxLevelData{
+					Level: fmt.Sprintf("%d - %d", taxLevel[i].Floor, taxLevel[i].Ceil),
+					Tax:   0,
+				})
+				continue
 			}
-			taxValueInLevel = income - float64(taxLevel[i].Floor)
-			tax = tax + taxValueInLevel*float64(taxLevel[i].TaxValue)/100
-			break
+
+			incomeValueInLevel = income - float64(taxLevel[i].Floor)
+			taxValueInLevel := incomeValueInLevel * float64(taxLevel[i].TaxValue) / 100
+			tax = tax + taxValueInLevel
+			data = append(data, structs.TaxLevelData{
+				Level: fmt.Sprintf("%d - %d", taxLevel[i].Floor, taxLevel[i].Ceil),
+				Tax:   taxValueInLevel,
+			})
+			continue
 		}
 
 	}
-	//log.Printf(string(tax))
-	data := []structs.TaxLevelData{
-		{Level: "0-150,000", Tax: 0},
-		{Level: "0-150,001", Tax: 500},
-	}
+
 	return data, tax
 
 }

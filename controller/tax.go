@@ -39,13 +39,13 @@ func TaxCalculationPost(c echo.Context) error {
 		totalDonationAllowance = donationDeduct
 	}
 	incomeDeductDonation := incomeDeductPersonal - totalDonationAllowance
-	_, taxCost := util.TaxCalculationFromTotalIncome(incomeDeductDonation)
+	taxLevelData, taxCost := util.TaxCalculationFromTotalIncome(incomeDeductDonation)
 	finalTax := taxCost - tax.Wht
 	if finalTax >= 0 {
-		taxResponse := struc.TaxResponse{Tax: finalTax}
+		taxResponse := struc.TaxResponse{Tax: finalTax, TaxLevel: taxLevelData}
 		return c.JSON(http.StatusOK, taxResponse)
 	} else {
-		taxResponse := struc.TaxResponse{TaxRefund: finalTax}
+		taxResponse := struc.TaxResponse{TaxRefund: finalTax, TaxLevel: taxLevelData}
 		return c.JSON(http.StatusOK, taxResponse)
 	}
 
