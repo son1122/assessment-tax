@@ -6,7 +6,7 @@ import (
 )
 
 // GetPersonalDeduct query personal deduct from database
-func GetPersonalDeduct() (float64, error) {
+func SetPersonalDeduct() (float64, error) {
 
 	var personalDeduct structs.GetTaxDeductStruct
 	err := db.DB.QueryRow(`SELECT amount_deduct,id,is_active,create_at FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'personal'`).Scan(&personalDeduct.PersonalDeduct, &personalDeduct.Id, &personalDeduct.Is_active, &personalDeduct.Create_at)
