@@ -60,13 +60,22 @@ func TestTaxCalculationsUploadCsv(t *testing.T) {
 
 	var actualResponse interface{}
 	var expectedResponse interface{}
-	expectedResponseBody := `{"taxes":
-	[
-	{"totalIncome":500000,"tax":29000},
-	{"totalIncome":600000,"taxRefund":2000},
-	{"totalIncome":750000,"tax":11250},
-	
-	]}`
+	expectedResponseBody := `{
+    "taxes": [
+        {
+            "totalIncome": 500000,
+            "tax": 29000
+        },
+        {
+            "totalIncome": 600000,
+            "taxRefund": 2000
+        },
+        {
+            "totalIncome": 750000,
+            "tax": 11250
+        }
+    ]
+}`
 
 	json.Unmarshal([]byte(expectedResponseBody), &expectedResponse)
 	json.Unmarshal(body, &actualResponse)
