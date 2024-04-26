@@ -64,7 +64,8 @@ func TestTaxCalculationsUploadCsv(t *testing.T) {
 	[
 	{"totalIncome":500000,"tax":29000},
 	{"totalIncome":600000,"taxRefund":2000},
-	{"totalIncome":750000,"tax":11250}
+	{"totalIncome":750000,"tax":11250},
+	
 	]}`
 
 	json.Unmarshal([]byte(expectedResponseBody), &expectedResponse)
