@@ -1,7 +1,9 @@
 package integration
 
 import (
-	"bytes"
+	"encoding/json"
+	"fmt"
+	struc "github.com/son1122/assessment-tax/structs"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -34,6 +36,7 @@ func TestTaxCalculationFunction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	req.Header.Add("Content-Type", "application/json")
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -45,32 +48,35 @@ func TestTaxCalculationFunction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	expected := `{
-    "taxRefund": 486000,
-    "taxLevel": [
-        {
-            "level": "0 - 150000",
-            "tax": 0
-        },
-        {
-            "level": "150000 - 500000",
-            "tax": 14000
-        },
-        {
-            "level": "500000 - 1000000",
-            "tax": 0
-        },
-        {
-            "level": "1000000 - 2000000",
-            "tax": 0
-        },
-        {
-            "level": "2000000 - ขึ้นไป",
-            "tax": 0
-        }
-    ]
-}`
-	if !bytes.Contains(body, []byte(expected)) {
-		t.Errorf("Unexpected response body: got %v want %v", string(body), expected)
+	var actualResponse struc.TaxResponse
+	if err := json.Unmarshal(body, &actualResponse); err != nil {
+		t.Fatalf("Failed to unmarshal response body: %v", err)
 	}
+	expectedResponse := struc.TaxResponse{
+		TaxRefund: 486000,
+		TaxLevel: []struc.TaxLevelData{
+			{"0 - 150000", 0},
+			{"150000 - 500000", 14000},
+			{"500000 - 1000000", 0},
+			{"1000000 - 2000000", 0},
+			{"2000000 - ขึ้นไป", 0},
+		},
+	}
+	if !compareTaxResponses(expectedResponse, actualResponse) {
+		t.Errorf("Unexpected response: got %+v want %+v", actualResponse, expectedResponse)
+	}
+
+}
+
+func compareTaxResponses(a, b struc.TaxResponse) bool {
+	if a.Tax != b.Tax || a.TaxRefund != b.TaxRefund || len(a.TaxLevel) != len(b.TaxLevel) {
+		return false
+	}
+	for i := range a.TaxLevel {
+		if a.TaxLevel[i].Level != b.TaxLevel[i].Level || a.TaxLevel[i].Tax != b.TaxLevel[i].Tax {
+			fmt.Printf("Mismatch found in TaxLevel[%d]: Expected %v, got %v\n", i, a.TaxLevel[i], b.TaxLevel[i])
+			return false
+		}
+	}
+	return true
 }
