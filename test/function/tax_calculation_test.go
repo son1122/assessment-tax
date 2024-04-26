@@ -8,8 +8,9 @@ import (
 )
 
 func TestTaxCalculationFromTotalIncome(t *testing.T) {
+
 	type args struct {
-		ncome float64
+		income float64
 	}
 	tests := []struct {
 		name  string
@@ -17,12 +18,12 @@ func TestTaxCalculationFromTotalIncome(t *testing.T) {
 		want  []structs.TaxLevelData
 		want1 float64
 	}{
-		// TODO: Add test cases.
-		{"test", args{ncome: 1000000}, nil, 15000},
+		{"test", args{income: 1000000}, nil, 15000},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := util.TaxCalculationFromTotalIncome(tt.args.ncome)
+			got, got1 := util.TaxCalculationFromTotalIncome(tt.args.income)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("TaxCalculationFromTotalIncome() got = %v, want %v", got, tt.want)
 			}
