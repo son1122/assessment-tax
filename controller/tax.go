@@ -7,6 +7,7 @@ import (
 	struc "github.com/son1122/assessment-tax/structs"
 	"github.com/son1122/assessment-tax/util"
 	"io"
+	"log"
 	"math"
 	"mime/multipart"
 	"net/http"
@@ -19,22 +20,26 @@ import (
 // @Tags tax
 // @Accept  json
 // @Produce  json
-// @Param   tax_body  body      _struct.TaxStruct  true  "Tax Calculation Request"
-// @Success 200 {object} _struct.TaxResponse  "Returns the calculated tax amount"
+// @Param   tax_body  body      struc.TaxStruct  true  "Tax Calculation Request"
+// @Success 200 {object} struc.TaxResponse  "Returns the calculated tax amount"
 // @Failure 400 {string} string "Invalid input parameters"
 // @Router /tax/calculations [post]
 func TaxCalculationPost(c echo.Context) error {
+	log.Println("start TaxCalculationPost")
 	var tax struc.TaxStruct
 	err := c.Bind(&tax)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		log.Println(err.Error())
+		return c.JSON(http.StatusBadRequest, err)
 	}
 	err = c.Validate(tax)
 	if err != nil {
+		log.Println(err.Error())
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 	deductTypeAndAmount, err := model.GetDeductType()
 	if err != nil {
+		log.Println(err.Error())
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -47,15 +52,18 @@ func TaxCalculationPost(c echo.Context) error {
 
 	personalDeduct, err := model.GetPersonalDeduct()
 	if err != nil {
+		log.Println(err.Error())
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 	donationDeduct, err := model.GetDonationDeduct()
 	if err != nil {
+		log.Println(err.Error())
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
 	kReceiptDeduct, err := model.GetKReceiptDeduct()
 	if err != nil {
+		log.Println(err.Error())
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -70,6 +78,7 @@ func TaxCalculationPost(c echo.Context) error {
 	incomeDeductKreceipt := incomeDeductDonation - deductTypeAndAmount["k-receipt"]
 	taxLevelData, taxCost := util.TaxCalculationFromTotalIncome(incomeDeductKreceipt)
 	finalTax := taxCost - tax.Wht
+	log.Println("fin TaxCalculationPost", finalTax)
 	if finalTax >= 0 {
 		taxResponse := struc.TaxResponse{Tax: finalTax, TaxLevel: taxLevelData}
 		return c.JSON(http.StatusOK, taxResponse)
@@ -80,18 +89,18 @@ func TaxCalculationPost(c echo.Context) error {
 
 }
 
-// TaxCalculationCSVPost handles the POST /tax/calculations route
+// TaxCalculationCSVPost handles the POST /tax/calculations/upload-csv route
 // @Summary Calculate taxes CSV
 // @Description Calculates taxes based on total income, withholding tax, and allowances. CSV
 // @Tags tax
 // @Accept  json
 // @Produce  json
-// @Param   tax_body  body      _struct.TaxStruct  true  "Tax Calculation Request"
-// @Success 200 {object} _struct.TaxResponse  "Returns the calculated tax amount"
+// @Param   tax_body  body      FormFile  true  "Tax Calculation Request"
+// @Success 200 {object} struc.TaxResponseCSVStruct  "Returns the calculated tax amount"
 // @Failure 400 {string} string "Invalid input parameters"
-// @Router /tax/calculations [post]
+// @Router /tax/calculations/upload-csv [post]
 func TaxCalculationCSVPost(c echo.Context) error {
-
+	log.Println("TaxCalculationCSVPost")
 	file, err := c.FormFile("taxFile")
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Failed to get the file")
@@ -115,6 +124,7 @@ func TaxCalculationCSVPost(c echo.Context) error {
 	if _, err = reader.Read(); err != nil {
 		return err
 	}
+	log.Println("file read success")
 	var loopNumber = 0
 	for {
 		record, err := reader.Read()
@@ -157,6 +167,6 @@ func TaxCalculationCSVPost(c echo.Context) error {
 
 		loopNumber += 1
 	}
-
+	log.Println("Fin TaxCalculationCSVPost")
 	return c.JSON(http.StatusOK, struc.TaxResponseCSVStruct{Taxes: taxes})
 }

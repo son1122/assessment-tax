@@ -14,10 +14,10 @@ import (
 // @Tags Admin
 // @Accept  json
 // @Produce  json
-// @Param   tax_body  body      _struct.TaxStruct  true  "Tax Calculation Request"
-// @Success 200 {object} _struct.TaxResponse  "Returns the calculated tax amount"
+// @Param   tax_body  body      _struct.AdminRequestStruct  true  "Tax Calculation Request"
+// @Success 200 {object} struc.AdminResponseStruct  "Returns the calculated tax amount"
 // @Failure 400 {string} string "Invalid input parameters"
-// @Router /tax/calculations [post]
+// @Router /admin/deductions/personal [post]
 
 func AdminDeductionPersonalAdjust(c echo.Context) error {
 	var amount struc.AdminRequestStruct
@@ -46,15 +46,15 @@ func AdminDeductionPersonalAdjust(c echo.Context) error {
 }
 
 // AdminDeductionPersonalAdjust handles the POST /admin/deductions/personal route
-// @Summary AdminDeductionPersonalAdjust
-// @Description AdminDeductionPersonalAdjust
+// @Summary AdminDeductionKReceiptAdjust
+// @Description AdminDeductionKReceiptAdjust
 // @Tags Admin
 // @Accept  json
 // @Produce  json
-// @Param   tax_body  body      _struct.TaxStruct  true  "Tax Calculation Request"
-// @Success 200 {object} _struct.TaxResponse  "Returns the calculated tax amount"
+// @Param   tax_body  body      _struct.AdminRequestStruct  true  "Tax Calculation Request"
+// @Success 200 {object} struc.AdminResponseStruct  "Returns the calculated tax amount"
 // @Failure 400 {string} string "Invalid input parameters"
-// @Router /tax/calculations [post]
+// @Router /admin/deductions/k-receipt [post]
 
 func AdminDeductionKReceiptAdjust(c echo.Context) error {
 	log.Println("start AdminDeductionKReceiptAdjust")
@@ -91,15 +91,15 @@ func AdminDeductionKReceiptAdjust(c echo.Context) error {
 }
 
 // AdminDeductionPersonalAdjust handles the POST /admin/deductions/personal route
-// @Summary AdminDeductionPersonalAdjust
-// @Description AdminDeductionPersonalAdjust
+// @Summary AdminDeductionDonationAdjust
+// @Description AdminDeductionDonationAdjust
 // @Tags Admin
 // @Accept  json
 // @Produce  json
-// @Param   tax_body  body      _struct.TaxStruct  true  "Tax Calculation Request"
-// @Success 200 {object} _struct.TaxResponse  "Returns the calculated tax amount"
+// @Param   tax_body  body      _struct.AdminRequestStruct  true  "Tax Calculation Request"
+// @Success 200 {object} struc.AdminResponseStruct  "Returns the calculated tax amount"
 // @Failure 400 {string} string "Invalid input parameters"
-// @Router /tax/calculations [post]
+// @Router /admin/deductions/donation [post]
 
 func AdminDeductionDonationAdjust(c echo.Context) error {
 	log.Println("start AdminDeductionDonationAdjust")
@@ -110,6 +110,7 @@ func AdminDeductionDonationAdjust(c echo.Context) error {
 	if err := c.Validate(amount); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+	log.Println("start SetDonationDeduct")
 	setDonationResult, err := model.SetDonationDeduct(amount.Amount)
 
 	if err != nil && setDonationResult != 0 {
@@ -124,6 +125,7 @@ func AdminDeductionDonationAdjust(c echo.Context) error {
 	response := struc.AdminResponseStruct{
 		Donation: setDonationResult,
 	}
+	log.Println("fin SetDonationDeduct")
 	return c.JSON(http.StatusOK, response)
 
 }
