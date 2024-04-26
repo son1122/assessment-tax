@@ -27,7 +27,7 @@ func executeSQLFile(db *sql.DB, filepath string) error {
 	return nil
 }
 
-func main() {
+func main2() {
 	constant.InitConfig()
 	cfg := constant.Get()
 
