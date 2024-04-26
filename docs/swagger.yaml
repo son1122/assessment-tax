@@ -1,5 +1,5 @@
 definitions:
-  _struct.AllowanceStruct:
+  structs.AllowanceStruct:
     properties:
       allowanceType:
         enum:
@@ -10,16 +10,29 @@ definitions:
         minimum: 0
         type: number
     type: object
-  _struct.TaxResponse:
+  structs.TaxLevelData:
     properties:
+      level:
+        type: string
       tax:
         type: number
     type: object
-  _struct.TaxStruct:
+  structs.TaxResponse:
+    properties:
+      tax:
+        type: number
+      taxLevel:
+        items:
+          $ref: '#/definitions/structs.TaxLevelData'
+        type: array
+      taxRefund:
+        type: number
+    type: object
+  structs.TaxStruct:
     properties:
       allowances:
         items:
-          $ref: '#/definitions/_struct.AllowanceStruct'
+          $ref: '#/definitions/structs.AllowanceStruct'
         type: array
       totalIncome:
         minimum: 0
@@ -42,19 +55,46 @@ paths:
           name: tax_body
           required: true
           schema:
-            $ref: '#/definitions/_struct.TaxStruct'
+            $ref: '#/definitions/structs.TaxStruct'
       produces:
         - application/json
       responses:
         "200":
           description: Returns the calculated tax amount
           schema:
-            $ref: '#/definitions/_struct.TaxResponse'
+            $ref: '#/definitions/structs.TaxResponse'
         "400":
           description: Invalid input parameters
           schema:
             type: string
       summary: Calculate taxes
+      tags:
+        - tax
+  /tax/calculations/upload-csv:
+    post:
+      consumes:
+        - application/json
+      description: Calculates taxes based on total income, withholding tax, and allowances.
+        CSV
+      parameters:
+        - description: Tax Calculation Request
+          in: body
+          name: tax_body
+          required: true
+          schema:
+            $ref: '#/definitions/structs.TaxStruct'
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Returns the calculated tax amount
+          schema:
+            $ref: '#/definitions/structs.TaxResponse'
+        "400":
+          description: Invalid input parameters
+          schema:
+            type: string
+      summary: Calculate taxes CSV
       tags:
         - tax
 swagger: "2.0"

@@ -33,14 +33,14 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Secure())
 	e.Use(middleware.Recover())
-	router.InitRoutes(e)
-
-	e.GET("/swagger/*", echoswagger.WrapHandler)
+	e.Validator = &util.CustomValidator{Validator: validator.New()}
 
 	e.GET("/health", func(c echo.Context) error {
 		return c.String(http.StatusOK, "healthy")
 	})
-	e.Validator = &util.CustomValidator{Validator: validator.New()}
+	e.GET("/swagger/*", echoswagger.WrapHandler)
+	router.InitRoutes(e)
+
 	go func() {
 		if err := e.Start(":" + cfg.Port); err != nil && err != http.ErrServerClosed {
 			e.Logger.Fatal("shutting down the server: ", err)

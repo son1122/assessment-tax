@@ -35,7 +35,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/_struct.TaxStruct"
+                            "$ref": "#/definitions/structs.TaxStruct"
                         }
                     }
                 ],
@@ -43,7 +43,47 @@ const docTemplate = `{
                     "200": {
                         "description": "Returns the calculated tax amount",
                         "schema": {
-                            "$ref": "#/definitions/_struct.TaxResponse"
+                            "$ref": "#/definitions/structs.TaxResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input parameters",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/tax/calculations/upload-csv": {
+            "post": {
+                "description": "Calculates taxes based on total income, withholding tax, and allowances. CSV",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tax"
+                ],
+                "summary": "Calculate taxes CSV",
+                "parameters": [
+                    {
+                        "description": "Tax Calculation Request",
+                        "name": "tax_body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/structs.TaxStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the calculated tax amount",
+                        "schema": {
+                            "$ref": "#/definitions/structs.TaxResponse"
                         }
                     },
                     "400": {
@@ -57,7 +97,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "_struct.AllowanceStruct": {
+        "structs.AllowanceStruct": {
             "type": "object",
             "properties": {
                 "allowanceType": {
@@ -73,21 +113,41 @@ const docTemplate = `{
                 }
             }
         },
-        "_struct.TaxResponse": {
+        "structs.TaxLevelData": {
             "type": "object",
             "properties": {
+                "level": {
+                    "type": "string"
+                },
                 "tax": {
                     "type": "number"
                 }
             }
         },
-        "_struct.TaxStruct": {
+        "structs.TaxResponse": {
+            "type": "object",
+            "properties": {
+                "tax": {
+                    "type": "number"
+                },
+                "taxLevel": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/structs.TaxLevelData"
+                    }
+                },
+                "taxRefund": {
+                    "type": "number"
+                }
+            }
+        },
+        "structs.TaxStruct": {
             "type": "object",
             "properties": {
                 "allowances": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/_struct.AllowanceStruct"
+                        "$ref": "#/definitions/structs.AllowanceStruct"
                     }
                 },
                 "totalIncome": {
