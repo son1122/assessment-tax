@@ -1,4 +1,4 @@
-Here's an enhanced and more detailed version of your `README.md` content:
+Here's the revised version of your `README.md` with the added instruction for initializing the database:
 
 ---
 
@@ -12,7 +12,14 @@ Here's an enhanced and more detailed version of your `README.md` content:
    docker-compose up
    ```
 
-2. **Build the Docker Image**:
+2. **Initialize the Database**:
+   After the database service is running, execute the following Go script to create tables based on the SQL files:
+   ```
+   go run initDb.go
+   ```
+   This script uses SQL files `master_deduct.sql` and `master_tax_level.sql` to set up the necessary database tables.
+
+3. **Build the Docker Image**:
    Build a Docker image for the application:
    ```
    docker build -t wongsatorn-tax .
