@@ -1,0 +1,19 @@
+mode: set
+github.com/son1122/assessment-tax/initDb.go:14.56,17.16 2 0
+github.com/son1122/assessment-tax/initDb.go:17.16,19.3 1 0
+github.com/son1122/assessment-tax/initDb.go:21.2,23.16 3 0
+github.com/son1122/assessment-tax/initDb.go:23.16,25.3 1 0
+github.com/son1122/assessment-tax/initDb.go:27.2,27.12 1 0
+github.com/son1122/assessment-tax/initDb.go:30.14,35.69 4 0
+github.com/son1122/assessment-tax/initDb.go:35.69,37.3 1 0
+github.com/son1122/assessment-tax/initDb.go:38.2,38.72 1 0
+github.com/son1122/assessment-tax/initDb.go:38.72,40.3 1 0
+github.com/son1122/assessment-tax/initDb.go:42.2,42.51 1 0
+github.com/son1122/assessment-tax/main.go:23.13,38.46 11 0
+github.com/son1122/assessment-tax/main.go:38.46,40.3 1 0
+github.com/son1122/assessment-tax/main.go:41.2,44.12 3 0
+github.com/son1122/assessment-tax/main.go:44.12,45.80 1 0
+github.com/son1122/assessment-tax/main.go:45.80,47.4 1 0
+github.com/son1122/assessment-tax/main.go:50.2,56.40 6 0
+github.com/son1122/assessment-tax/main.go:56.40,58.3 1 0
+github.com/son1122/assessment-tax/main.go:59.2,60.41 2 0

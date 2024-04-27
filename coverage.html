@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>constant: Go Coverage Report</title>
+    <style>
+        body {
+            background: black;
+            color: rgb(80, 80, 80);
+        }
+
+        body, pre, #legend span {
+            font-family: Menlo, monospace;
+            font-weight: bold;
+        }
+
+        #topbar {
+            background: black;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 42px;
+            border-bottom: 1px solid rgb(80, 80, 80);
+        }
+
+        #content {
+            margin-top: 50px;
+        }
+
+        #nav, #legend {
+            float: left;
+            margin-left: 10px;
+        }
+
+        #legend {
+            margin-top: 12px;
+        }
+
+        #nav {
+            margin-top: 10px;
+        }
+
+        #legend span {
+            margin: 0 5px;
+        }
+
+        .cov0 {
+            color: rgb(192, 0, 0)
+        }
+
+        .cov1 {
+            color: rgb(128, 128, 128)
+        }
+
+        .cov2 {
+            color: rgb(116, 140, 131)
+        }
+
+        .cov3 {
+            color: rgb(104, 152, 134)
+        }
+
+        .cov4 {
+            color: rgb(92, 164, 137)
+        }
+
+        .cov5 {
+            color: rgb(80, 176, 140)
+        }
+
+        .cov6 {
+            color: rgb(68, 188, 143)
+        }
+
+        .cov7 {
+            color: rgb(56, 200, 146)
+        }
+
+        .cov8 {
+            color: rgb(44, 212, 149)
+        }
+
+        .cov9 {
+            color: rgb(32, 224, 152)
+        }
+
+        .cov10 {
+            color: rgb(20, 236, 155)
+        }
+
+    </style>
+</head>
+<body>
+<div id="topbar">
+    <div id="nav">
+        <select id="files">
+
+            <option value="file0">github.com/son1122/assessment-tax/constant/config.go (75.0%)</option>
+
+            <option value="file1">github.com/son1122/assessment-tax/controller/admin.go (0.0%)</option>
+
+            <option value="file2">github.com/son1122/assessment-tax/controller/tax.go (0.0%)</option>
+
+            <option value="file3">github.com/son1122/assessment-tax/db/db.go (71.4%)</option>
+
+            <option value="file4">github.com/son1122/assessment-tax/docs/docs.go (0.0%)</option>
+
+            <option value="file5">github.com/son1122/assessment-tax/main.go (0.0%)</option>
+
+            <option value="file6">github.com/son1122/assessment-tax/middleware/basicAuthMiddleware.go (0.0%)</option>
+
+            <option value="file7">github.com/son1122/assessment-tax/model/getDeductType.go (0.0%)</option>
+
+            <option value="file8">github.com/son1122/assessment-tax/model/getDonationDeduct.go (0.0%)</option>
+
+            <option value="file9">github.com/son1122/assessment-tax/model/getFloorDonationDeduct.go (0.0%)</option>
+
+            <option value="file10">github.com/son1122/assessment-tax/model/getFloorKReceiptDeduct.go (0.0%)</option>
+
+            <option value="file11">github.com/son1122/assessment-tax/model/getFloorPersonalDeduct.go (0.0%)</option>
+
+            <option value="file12">github.com/son1122/assessment-tax/model/getKReceiptDeduct.go (0.0%)</option>
+
+            <option value="file13">github.com/son1122/assessment-tax/model/getMaxDonationDeduct.go (0.0%)</option>
+
+            <option value="file14">github.com/son1122/assessment-tax/model/getMaxKReceiptDeduct.go (0.0%)</option>
+
+            <option value="file15">github.com/son1122/assessment-tax/model/getMaxPersonalDeduct.go (0.0%)</option>
+
+            <option value="file16">github.com/son1122/assessment-tax/model/getPersonalDeduct.go (100.0%)</option>
+
+            <option value="file17">github.com/son1122/assessment-tax/model/getTaxLevel.go (92.3%)</option>
+
+            <option value="file18">github.com/son1122/assessment-tax/model/setDonationDeduct.go (0.0%)</option>
+
+            <option value="file19">github.com/son1122/assessment-tax/model/setKReceiptDeduct.go (0.0%)</option>
+
+            <option value="file20">github.com/son1122/assessment-tax/model/setPersonalDeduct.go (0.0%)</option>
+
+            <option value="file21">github.com/son1122/assessment-tax/router/router.go (0.0%)</option>
+
+            <option value="file22">github.com/son1122/assessment-tax/util/commaFormat.go (83.3%)</option>
+
+            <option value="file23">github.com/son1122/assessment-tax/util/tax_calculation.go (100.0%)</option>
+
+            <option value="file24">github.com/son1122/assessment-tax/util/validate_struct.go (0.0%)</option>
+
+        </select>
+    </div>
+    <div id="legend">
+        <span>not tracked</span>
+
+        <span class="cov0">not covered</span>
+        <span class="cov8">covered</span>
+
+    </div>
+</div>
+<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package constant
+
+import (
+        "os"
+        "sync"
+)
+
+// Config holds the application configuration values
+type Config struct {
+        DatabaseURL   string
+        Port          string
+        AdminUsername string
+        AdminPassword string
+}
+
+// cfg holds the instance of Config to ensure it is initialized only once.
+var cfg *Config
+var once sync.Once
+
+// InitConfig initializes the configuration object if it has not been initialized already.
+func InitConfig() <span class="cov8" title="1">{
+        once.Do(func() </span><span class="cov8" title="1">{
+                cfg = &amp;Config{
+                        DatabaseURL:   getEnv("DATABASE_URL", "host=localhost port=5432 user=postgres password=postgres dbname=ktaxes sslmode=disable"),
+                        Port:          getEnv("PORT", "8080"),
+                        AdminUsername: getEnv("ADMIN_USERNAME", "adminTax"),
+                        AdminPassword: getEnv("ADMIN_PASSWORD", "admin!"),
+                }
+        }</span>)
+}
+
+// Get returns the global configuration instance.
+func Get() *Config <span class="cov8" title="1">{
+        if cfg == nil </span><span class="cov0" title="0">{
+                InitConfig()
+        }</span>
+        <span class="cov8" title="1">return cfg</span>
+}
+
+// getEnv tries to get a value from the environment and falls back to a default value if not found.
+func getEnv(key, fallback string) string <span class="cov8" title="1">{
+        if value, exists := os.LookupEnv(key); exists </span><span class="cov0" title="0">{
+                return value
+        }</span>
+        <span class="cov8" title="1">return fallback</span>
+}
+</pre>
+
+    <pre class="file" id="file1" style="display: none">package controller
+
+import (
+        "github.com/labstack/echo/v4"
+        "github.com/son1122/assessment-tax/model"
+        struc "github.com/son1122/assessment-tax/structs"
+        "log"
+        "net/http"
+)
+
+// AdminDeductionPersonalAdjust handles the POST /admin/deductions/personal route
+// @Summary AdminDeductionPersonalAdjust
+// @Description AdminDeductionPersonalAdjust
+// @Tags Admin
+// @Accept  json
+// @Produce  json
+// @Param   tax_body  body      _struct.AdminRequestStruct  true  "Tax Calculation Request"
+// @Success 200 {object} struc.AdminResponseStruct  "Returns the calculated tax amount"
+// @Failure 400 {string} string "Invalid input parameters"
+// @Router /admin/deductions/personal [post]
+
+func AdminDeductionPersonalAdjust(c echo.Context) error <span class="cov0" title="0">{
+        var amount struc.AdminRequestStruct
+        if err := c.Bind(&amp;amount); err != nil </span><span class="cov0" title="0">{
+                return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
+        }</span>
+        <span class="cov0" title="0">if err := c.Validate(amount); err != nil </span><span class="cov0" title="0">{
+                return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+        }</span>
+        <span class="cov0" title="0">setPersonalResult, err := model.SetPersonalDeduct(amount.Amount)
+
+        if err != nil &amp;&amp; setPersonalResult != 0 </span><span class="cov0" title="0">{
+                return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+        }</span>
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+        }</span>
+        <span class="cov0" title="0">if setPersonalResult == 0 </span><span class="cov0" title="0">{
+                return c.JSON(http.StatusOK, map[string]int{"personalDeduction": 0})
+        }</span>
+        <span class="cov0" title="0">response := struc.AdminResponseStruct{
+                PersonalDeduction: setPersonalResult,
+        }
+        return c.JSON(http.StatusOK, response)</span>
+
+}
+
+// AdminDeductionPersonalAdjust handles the POST /admin/deductions/personal route
+// @Summary AdminDeductionKReceiptAdjust
+// @Description AdminDeductionKReceiptAdjust
+// @Tags Admin
+// @Accept  json
+// @Produce  json
+// @Param   tax_body  body      _struct.AdminRequestStruct  true  "Tax Calculation Request"
+// @Success 200 {object} struc.AdminResponseStruct  "Returns the calculated tax amount"
+// @Failure 400 {string} string "Invalid input parameters"
+// @Router /admin/deductions/k-receipt [post]
+
+func AdminDeductionKReceiptAdjust(c echo.Context) error <span class="cov0" title="0">{
+        log.Println("start AdminDeductionKReceiptAdjust")
+        var amount struc.AdminRequestStruct
+        if err := c.Bind(&amp;amount); err != nil </span><span class="cov0" title="0">{
+                log.Println(err)
+                return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
+        }</span>
+        <span class="cov0" title="0">if err := c.Validate(amount); err != nil </span><span class="cov0" title="0">{
+                log.Println(err)
+                return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+        }</span>
+
+        <span class="cov0" title="0">setKReceiptResult, err := model.SetKReceiptDeduct(amount.Amount)
+
+        if err != nil &amp;&amp; setKReceiptResult != 0 </span><span class="cov0" title="0">{
+                log.Println(err.Error())
+                return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+        }</span>
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                log.Println(err.Error())
+                return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+        }</span>
+        <span class="cov0" title="0">if setKReceiptResult == 0 </span><span class="cov0" title="0">{
+                log.Println(map[string]int{"kReceipt": 0})
+                return c.JSON(http.StatusOK, map[string]int{"kReceipt": 0})
+        }</span>
+        <span class="cov0" title="0">response := struc.AdminResponseStruct{
+                KReceipt: setKReceiptResult,
+        }
+        log.Println(response)
+        return c.JSON(http.StatusOK, response)</span>
+
+}
+
+// AdminDeductionPersonalAdjust handles the POST /admin/deductions/personal route
+// @Summary AdminDeductionDonationAdjust
+// @Description AdminDeductionDonationAdjust
+// @Tags Admin
+// @Accept  json
+// @Produce  json
+// @Param   tax_body  body      _struct.AdminRequestStruct  true  "Tax Calculation Request"
+// @Success 200 {object} struc.AdminResponseStruct  "Returns the calculated tax amount"
+// @Failure 400 {string} string "Invalid input parameters"
+// @Router /admin/deductions/donation [post]
+
+func AdminDeductionDonationAdjust(c echo.Context) error <span class="cov0" title="0">{
+        log.Println("start AdminDeductionDonationAdjust")
+        var amount struc.AdminRequestStruct
+        if err := c.Bind(&amp;amount); err != nil </span><span class="cov0" title="0">{
+                return echo.NewHTTPError(http.StatusBadRequest, "Invalid input")
+        }</span>
+        <span class="cov0" title="0">if err := c.Validate(amount); err != nil </span><span class="cov0" title="0">{
+                return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+        }</span>
+        <span class="cov0" title="0">log.Println("start SetDonationDeduct")
+        setDonationResult, err := model.SetDonationDeduct(amount.Amount)
+
+        if err != nil &amp;&amp; setDonationResult != 0 </span><span class="cov0" title="0">{
+                return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+        }</span>
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+        }</span>
+        <span class="cov0" title="0">if setDonationResult == 0 </span><span class="cov0" title="0">{
+                return c.JSON(http.StatusOK, map[string]int{"donationDeduction": 0})
+        }</span>
+        <span class="cov0" title="0">response := struc.AdminResponseStruct{
+                Donation: setDonationResult,
+        }
+        log.Println("fin SetDonationDeduct")
+        return c.JSON(http.StatusOK, response)</span>
+
+}
+</pre>
+
+    <pre class="file" id="file2" style="display: none">package controller
+
+import (
+        "encoding/csv"
+        "github.com/labstack/echo/v4"
+        "github.com/son1122/assessment-tax/model"
+        struc "github.com/son1122/assessment-tax/structs"
+        "github.com/son1122/assessment-tax/util"
+        "io"
+        "log"
+        "math"
+        "mime/multipart"
+        "net/http"
+        "strconv"
+)
+
+// TaxCalculationPost handles the POST /tax/calculations route
+// @Summary Calculate taxes
+// @Description Calculates taxes based on total income, withholding tax, and allowances.
+// @Tags tax
+// @Accept  json
+// @Produce  json
+// @Param   tax_body  body      struc.TaxStruct  true  "Tax Calculation Request"
+// @Success 200 {object} struc.TaxResponse  "Returns the calculated tax amount"
+// @Failure 400 {string} string "Invalid input parameters"
+// @Router /tax/calculations [post]
+func TaxCalculationPost(c echo.Context) error <span class="cov0" title="0">{
+        log.Println("start TaxCalculationPost")
+        var tax struc.TaxStruct
+        err := c.Bind(&amp;tax)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Println(err.Error())
+                return c.JSON(http.StatusBadRequest, err)
+        }</span>
+        <span class="cov0" title="0">err = c.Validate(tax)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Println(err.Error())
+                return c.JSON(http.StatusInternalServerError, err)
+        }</span>
+        <span class="cov0" title="0">deductTypeAndAmount, err := model.GetDeductType()
+        if err != nil </span><span class="cov0" title="0">{
+                log.Println(err.Error())
+                return c.JSON(http.StatusInternalServerError, err)
+        }</span>
+
+        <span class="cov0" title="0">totalAllowance := 0.0
+
+        for _, typeDeduct := range tax.Allowances </span><span class="cov0" title="0">{
+                deductTypeAndAmount[typeDeduct.AllowanceType] += typeDeduct.Amount
+                totalAllowance += typeDeduct.Amount
+        }</span>
+
+        <span class="cov0" title="0">personalDeduct, err := model.GetPersonalDeduct()
+        if err != nil </span><span class="cov0" title="0">{
+                log.Println(err.Error())
+                return c.JSON(http.StatusInternalServerError, err)
+        }</span>
+        <span class="cov0" title="0">donationDeduct, err := model.GetDonationDeduct()
+        if err != nil </span><span class="cov0" title="0">{
+                log.Println(err.Error())
+                return c.JSON(http.StatusInternalServerError, err)
+        }</span>
+
+        <span class="cov0" title="0">kReceiptDeduct, err := model.GetKReceiptDeduct()
+        if err != nil </span><span class="cov0" title="0">{
+                log.Println(err.Error())
+                return c.JSON(http.StatusInternalServerError, err)
+        }</span>
+
+        <span class="cov0" title="0">if donationDeduct &lt; deductTypeAndAmount["donation"] </span><span class="cov0"
+                                                                                                         title="0">{
+                deductTypeAndAmount["donation"] = donationDeduct
+        }</span>
+        <span class="cov0" title="0">if kReceiptDeduct &lt; deductTypeAndAmount["k-receipt"] </span><span class="cov0"
+                                                                                                          title="0">{
+                deductTypeAndAmount["k-receipt"] = kReceiptDeduct
+        }</span>
+        <span class="cov0" title="0">incomeDeductPersonal := tax.TotalIncome - personalDeduct
+        incomeDeductDonation := incomeDeductPersonal - deductTypeAndAmount["donation"]
+        incomeDeductKreceipt := incomeDeductDonation - deductTypeAndAmount["k-receipt"]
+        taxLevelData, taxCost := util.TaxCalculationFromTotalIncome(incomeDeductKreceipt)
+        finalTax := taxCost - tax.Wht
+        log.Println("fin TaxCalculationPost", finalTax)
+        if finalTax &gt;= 0 </span><span class="cov0" title="0">{
+                taxResponse := struc.TaxResponse{Tax: finalTax, TaxLevel: taxLevelData}
+                return c.JSON(http.StatusOK, taxResponse)
+        }</span> else<span class="cov0" title="0"> {
+                taxResponse := struc.TaxResponse{TaxRefund: math.Abs(finalTax), TaxLevel: taxLevelData}
+                return c.JSON(http.StatusOK, taxResponse)
+        }</span>
+
+}
+
+// TaxCalculationCSVPost handles the POST /tax/calculations/upload-csv route
+// @Summary Calculate taxes CSV
+// @Description Calculates taxes based on total income, withholding tax, and allowances. CSV
+// @Tags tax
+// @Accept  json
+// @Produce  json
+// @Param   tax_body  body      FormFile  true  "Tax Calculation Request"
+// @Success 200 {object} struc.TaxResponseCSVStruct  "Returns the calculated tax amount"
+// @Failure 400 {string} string "Invalid input parameters"
+// @Router /tax/calculations/upload-csv [post]
+func TaxCalculationCSVPost(c echo.Context) error <span class="cov0" title="0">{
+        log.Println("TaxCalculationCSVPost")
+        file, err := c.FormFile("taxFile")
+        if err != nil </span><span class="cov0" title="0">{
+                return echo.NewHTTPError(http.StatusBadRequest, "Failed to get the file")
+        }</span>
+
+        <span class="cov0" title="0">src, err := file.Open()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">defer func(src multipart.File) error </span><span class="cov0" title="0">{
+                err := src.Close()
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+                <span class="cov0" title="0">return nil</span>
+        }(src)
+
+        <span class="cov0" title="0">reader := csv.NewReader(src)
+        var taxes []struc.TaxResponseCSVDataStruct
+
+        if _, err = reader.Read(); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">log.Println("file read success")
+        var loopNumber = 0
+        for </span><span class="cov0" title="0">{
+                record, err := reader.Read()
+                if err == io.EOF </span><span class="cov0" title="0">{
+                        break</span>
+                }
+                <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                        return echo.NewHTTPError(http.StatusInternalServerError, "Failed to read the csv file")
+                }</span>
+
+                <span class="cov0" title="0">totalIncome, err := strconv.ParseFloat(record[0], 64)
+                wht, err := strconv.ParseFloat(record[1], 64)
+                donation, err := strconv.ParseFloat(record[2], 64)
+                if err != nil </span><span class="cov0" title="0">{
+                        return echo.NewHTTPError(http.StatusBadRequest, "Invalid totalIncome value")
+                }</span>
+                <span class="cov0" title="0">personalDeduct, _ := model.GetPersonalDeduct()
+                //donationDeduct, _ := model.GetDonationDeduct()
+                totalIncomeDeductPersonal := totalIncome - personalDeduct
+                totalIncomeDeductDonation := totalIncomeDeductPersonal - donation
+                _, tax := util.TaxCalculationFromTotalIncome(totalIncomeDeductDonation)
+                finalTax := tax - wht
+                if finalTax &gt;= 0 </span><span class="cov0" title="0">{
+                        taxes = append(
+                                taxes,
+                                struc.TaxResponseCSVDataStruct{
+                                        TotalIncome: totalIncome,
+                                        Tax:         finalTax,
+                                },
+                        )
+                }</span> else<span class="cov0" title="0"> {
+                        taxes = append(
+                                taxes,
+                                struc.TaxResponseCSVDataStruct{
+                                        TotalIncome: totalIncome,
+                                        TaxRefund:   math.Abs(finalTax),
+                                },
+                        )
+                }</span>
+
+                <span class="cov0" title="0">loopNumber += 1</span>
+        }
+        <span class="cov0" title="0">log.Println("Fin TaxCalculationCSVPost")
+        return c.JSON(http.StatusOK, struc.TaxResponseCSVStruct{Taxes: taxes})</span>
+}
+</pre>
+
+    <pre class="file" id="file3" style="display: none">package db
+
+import (
+        "database/sql"
+        _ "github.com/lib/pq"
+        "log"
+)
+
+var DB *sql.DB
+
+func SetDB(database *sql.DB) <span class="cov8" title="1">{
+        DB = database
+}</span>
+func InitDB(dataSourceName string) <span class="cov8" title="1">{
+        var err error
+        DB, err = sql.Open("postgres", dataSourceName)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Panic(err)
+        }</span>
+
+        <span class="cov8" title="1">if err = DB.Ping(); err != nil </span><span class="cov0" title="0">{
+                log.Panic(err)
+        }</span>
+}
+</pre>
+
+    <pre class="file" id="file4" style="display: none">// Package docs Code generated by swaggo/swag. DO NOT EDIT
+package docs
+
+import "github.com/swaggo/swag"
+
+const docTemplate = `{
+    "schemes": {{ marshal .Schemes }},
+    "swagger": "2.0",
+    "info": {
+        "description": "{{escape .Description}}",
+        "title": "{{.Title}}",
+        "contact": {},
+        "version": "{{.Version}}"
+    },
+    "host": "{{.Host}}",
+    "basePath": "{{.BasePath}}",
+    "paths": {
+        "/tax/calculations": {
+            "post": {
+                "description": "Calculates taxes based on total income, withholding tax, and allowances.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tax"
+                ],
+                "summary": "Calculate taxes",
+                "parameters": [
+                    {
+                        "description": "Tax Calculation Request",
+                        "name": "tax_body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/structs.TaxStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the calculated tax amount",
+                        "schema": {
+                            "$ref": "#/definitions/structs.TaxResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input parameters",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/tax/calculations/upload-csv": {
+            "post": {
+                "description": "Calculates taxes based on total income, withholding tax, and allowances. CSV",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tax"
+                ],
+                "summary": "Calculate taxes CSV",
+                "parameters": [
+                    {
+                        "description": "Tax Calculation Request",
+                        "name": "tax_body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/structs.TaxStruct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the calculated tax amount",
+                        "schema": {
+                            "$ref": "#/definitions/structs.TaxResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input parameters",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "structs.AllowanceStruct": {
+            "type": "object",
+            "properties": {
+                "allowanceType": {
+                    "type": "string",
+                    "enum": [
+                        "donation",
+                        "k-receipt"
+                    ]
+                },
+                "amount": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        },
+        "structs.TaxLevelData": {
+            "type": "object",
+            "properties": {
+                "level": {
+                    "type": "string"
+                },
+                "tax": {
+                    "type": "number"
+                }
+            }
+        },
+        "structs.TaxResponse": {
+            "type": "object",
+            "properties": {
+                "tax": {
+                    "type": "number"
+                },
+                "taxLevel": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/structs.TaxLevelData"
+                    }
+                },
+                "taxRefund": {
+                    "type": "number"
+                }
+            }
+        },
+        "structs.TaxStruct": {
+            "type": "object",
+            "properties": {
+                "allowances": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/structs.AllowanceStruct"
+                    }
+                },
+                "totalIncome": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "wht": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        }
+    }
+}`
+
+// SwaggerInfo holds exported Swagger Info so clients can modify it
+var SwaggerInfo = &amp;swag.Spec{
+        Version:          "",
+        Host:             "",
+        BasePath:         "",
+        Schemes:          []string{},
+        Title:            "",
+        Description:      "",
+        InfoInstanceName: "swagger",
+        SwaggerTemplate:  docTemplate,
+        LeftDelim:        "{{",
+        RightDelim:       "}}",
+}
+
+func init() <span class="cov0" title="0">{
+        swag.Register(SwaggerInfo.InstanceName(), SwaggerInfo)
+}</span>
+</pre>
+
+    <pre class="file" id="file5" style="display: none">package main
+
+import (
+        "context"
+        "fmt"
+        "github.com/go-playground/validator/v10"
+        "github.com/labstack/echo/v4"
+        "github.com/labstack/echo/v4/middleware"
+        "github.com/labstack/gommon/log"
+        "github.com/son1122/assessment-tax/constant"
+        "github.com/son1122/assessment-tax/db"
+        _ "github.com/son1122/assessment-tax/docs"
+        "github.com/son1122/assessment-tax/router"
+        "github.com/son1122/assessment-tax/util"
+        echoswagger "github.com/swaggo/echo-swagger"
+        "net/http"
+        "os"
+        "os/signal"
+        "syscall"
+        "time"
+)
+
+func main() <span class="cov0" title="0">{
+
+        e := echo.New()
+        e.Logger.SetLevel(log.INFO)
+
+        constant.InitConfig()
+        cfg := constant.Get()
+
+        db.InitDB(cfg.DatabaseURL)
+        e.Use(middleware.CORS())
+        e.Use(middleware.Logger())
+        e.Use(middleware.Secure())
+        e.Use(middleware.Recover())
+        e.Validator = &amp;util.CustomValidator{Validator: validator.New()}
+
+        e.GET("/health", func(c echo.Context) error </span><span class="cov0" title="0">{
+                return c.String(http.StatusOK, "healthy")
+        }</span>)
+        <span class="cov0" title="0">e.GET("/swagger/*", echoswagger.WrapHandler)
+        router.InitRoutes(e)
+
+        go func() </span><span class="cov0" title="0">{
+                if err := e.Start(":" + cfg.Port); err != nil &amp;&amp; err != http.ErrServerClosed </span><span
+                class="cov0" title="0">{
+                        e.Logger.Fatal("shutting down the server: ", err)
+                }</span>
+        }()
+
+        <span class="cov0" title="0">quit := make(chan os.Signal, 1)
+        signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+        &lt;-quit
+
+        ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+        defer cancel()
+        if err := e.Shutdown(ctx); err != nil </span><span class="cov0" title="0">{
+                e.Logger.Fatal("error shutting down the server: ", err)
+        }</span>
+        <span class="cov0" title="0">e.Logger.Info("Server gracefully stopped")
+        fmt.Println("shutting down the server")</span>
+
+}
+</pre>
+
+    <pre class="file" id="file6" style="display: none">package middleware
+
+import (
+        "encoding/base64"
+        "github.com/labstack/echo/v4"
+        "github.com/son1122/assessment-tax/constant"
+        "strings"
+)
+
+func BasicAuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc <span class="cov0" title="0">{
+        return func(c echo.Context) error </span><span class="cov0" title="0">{
+                authorizationHeader := c.Request().Header.Get("Authorization")
+                if authorizationHeader == "" </span><span class="cov0" title="0">{
+                        return echo.NewHTTPError(401, "Authentication required")
+                }</span>
+
+                <span class="cov0" title="0">authParts := strings.SplitN(authorizationHeader, " ", 2)
+                if len(authParts) != 2 || authParts[0] != "Basic" </span><span class="cov0" title="0">{
+                        return echo.NewHTTPError(401, "Invalid authentication format")
+                }</span>
+
+                <span class="cov0" title="0">encodedCredentials := authParts[1]
+
+                cfg := constant.Get()
+                correctCredentials := base64.StdEncoding.EncodeToString([]byte(cfg.AdminUsername + ":" + cfg.AdminPassword))
+
+                if encodedCredentials != correctCredentials </span><span class="cov0" title="0">{
+                        return echo.NewHTTPError(401, "Invalid credentials")
+                }</span>
+
+                <span class="cov0" title="0">return next(c)</span>
+        }
+}
+</pre>
+
+    <pre class="file" id="file7" style="display: none">package model
+
+import (
+        "github.com/son1122/assessment-tax/db"
+)
+
+// GetDeductType query personal deduct from database
+func GetDeductType() (map[string]float64, error) <span class="cov0" title="0">{
+        deductAmount := make(map[string]float64)
+
+        // Use Query to handle multiple rows
+
+        rows, err := db.DB.Query(`
+                SELECT DISTINCT ON (md.type_deduct) md.type_deduct
+                FROM master_deduct md
+                WHERE md.type_deduct NOT LIKE 'max-%'
+                  AND md.type_deduct NOT LIKE 'floor-%'
+                  AND md.is_active = 'true'
+                ORDER BY md.type_deduct, md.create_at;
+        `)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">defer rows.Close()
+
+        var typeDeduct string
+        amount := 0.0
+
+        for rows.Next() </span><span class="cov0" title="0">{
+                if err := rows.Scan(&amp;typeDeduct); err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov0" title="0">deductAmount[typeDeduct] = amount</span>
+        }
+
+        <span class="cov0" title="0">if err := rows.Err(); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return deductAmount, nil</span>
+}
+</pre>
+
+    <pre class="file" id="file8" style="display: none">package model
+
+import (
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetPersonalDeduct query personal deduct from database
+func GetDonationDeduct() (float64, error) <span class="cov0" title="0">{
+
+        var donationDeduct structs.GetTaxDeductStruct
+        err := db.DB.QueryRow(`SELECT amount_deduct,id,is_active,create_at,version FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'donation'`).Scan(&amp;donationDeduct.PersonalDeduct, &amp;donationDeduct.Id, &amp;donationDeduct.Is_active, &amp;donationDeduct.Create_at, &amp;donationDeduct.Version)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return donationDeduct.PersonalDeduct, err</span>
+}
+</pre>
+
+    <pre class="file" id="file9" style="display: none">package model
+
+import (
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetPersonalDeduct query personal deduct from database
+func GetFloorDonationDeduct() (float64, error) <span class="cov0" title="0">{
+
+        var personalDeduct structs.GetTaxDeductStruct
+        err := db.DB.QueryRow(`SELECT amount_deduct,id,is_active,create_at FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'floor-donation'`).Scan(&amp;personalDeduct.PersonalDeduct, &amp;personalDeduct.Id, &amp;personalDeduct.Is_active, &amp;personalDeduct.Create_at)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return personalDeduct.PersonalDeduct, err</span>
+}
+</pre>
+
+    <pre class="file" id="file10" style="display: none">package model
+
+import (
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetPersonalDeduct query personal deduct from database
+func GetFloorKReceiptDeduct() (float64, error) <span class="cov0" title="0">{
+
+        var personalDeduct structs.GetTaxDeductStruct
+        err := db.DB.QueryRow(`SELECT amount_deduct,id,is_active,create_at FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'floor-k-receipt'`).Scan(&amp;personalDeduct.PersonalDeduct, &amp;personalDeduct.Id, &amp;personalDeduct.Is_active, &amp;personalDeduct.Create_at)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return personalDeduct.PersonalDeduct, err</span>
+}
+</pre>
+
+    <pre class="file" id="file11" style="display: none">package model
+
+import (
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetPersonalDeduct query personal deduct from database
+func GetFloorPersonalDeduct() (float64, error) <span class="cov0" title="0">{
+
+        var personalDeduct structs.GetTaxDeductStruct
+        err := db.DB.QueryRow(`SELECT amount_deduct,id,is_active,create_at FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'floor-personal'`).Scan(&amp;personalDeduct.PersonalDeduct, &amp;personalDeduct.Id, &amp;personalDeduct.Is_active, &amp;personalDeduct.Create_at)
+        return personalDeduct.PersonalDeduct, err
+}</span>
+</pre>
+
+    <pre class="file" id="file12" style="display: none">package model
+
+import (
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetPersonalDeduct query personal deduct from database
+func GetKReceiptDeduct() (float64, error) <span class="cov0" title="0">{
+
+        var kReceiptDeduct structs.GetTaxDeductStruct
+        err := db.DB.QueryRow(`SELECT amount_deduct,id,is_active,create_at FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'k-receipt'`).Scan(&amp;kReceiptDeduct.PersonalDeduct, &amp;kReceiptDeduct.Id, &amp;kReceiptDeduct.Is_active, &amp;kReceiptDeduct.Create_at)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return kReceiptDeduct.PersonalDeduct, err</span>
+}
+</pre>
+
+    <pre class="file" id="file13" style="display: none">package model
+
+import (
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetPersonalDeduct query personal deduct from database
+func GetMaxDonationDeduct() (float64, error) <span class="cov0" title="0">{
+
+        var personalDeduct structs.GetTaxDeductStruct
+        err := db.DB.QueryRow(`SELECT amount_deduct,id,is_active,create_at FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'max-donation'`).Scan(&amp;personalDeduct.PersonalDeduct, &amp;personalDeduct.Id, &amp;personalDeduct.Is_active, &amp;personalDeduct.Create_at)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return personalDeduct.PersonalDeduct, err</span>
+}
+</pre>
+
+    <pre class="file" id="file14" style="display: none">package model
+
+import (
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetPersonalDeduct query personal deduct from database
+func GetMaxKReceiptDeduct() (float64, error) <span class="cov0" title="0">{
+
+        var personalDeduct structs.GetTaxDeductStruct
+        err := db.DB.QueryRow(`SELECT amount_deduct,id,is_active,create_at FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'max-k-receipt'`).Scan(&amp;personalDeduct.PersonalDeduct, &amp;personalDeduct.Id, &amp;personalDeduct.Is_active, &amp;personalDeduct.Create_at)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return personalDeduct.PersonalDeduct, err</span>
+}
+</pre>
+
+    <pre class="file" id="file15" style="display: none">package model
+
+import (
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetPersonalDeduct query personal deduct from database
+func GetMaxPersonalDeduct() (float64, error) <span class="cov0" title="0">{
+
+        var personalDeduct structs.GetTaxDeductStruct
+        err := db.DB.QueryRow(`SELECT amount_deduct,id,is_active,create_at FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'max-personal'`).Scan(&amp;personalDeduct.PersonalDeduct, &amp;personalDeduct.Id, &amp;personalDeduct.Is_active, &amp;personalDeduct.Create_at)
+        return personalDeduct.PersonalDeduct, err
+}</span>
+</pre>
+
+    <pre class="file" id="file16" style="display: none">package model
+
+import (
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetPersonalDeduct query personal deduct from database
+func GetPersonalDeduct() (float64, error) <span class="cov8" title="1">{
+
+        var personalDeduct structs.GetTaxDeductStruct
+        err := db.DB.QueryRow(`SELECT amount_deduct,id,is_active,create_at FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'personal'`).Scan(&amp;personalDeduct.PersonalDeduct, &amp;personalDeduct.Id, &amp;personalDeduct.Is_active, &amp;personalDeduct.Create_at)
+        return personalDeduct.PersonalDeduct, err
+}</span>
+</pre>
+
+    <pre class="file" id="file17" style="display: none">package model
+
+import (
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetTaxLevel query tax level from database
+func GetTaxLevel() ([]structs.TaxLevel, error) <span class="cov8" title="1">{
+
+        rows, err := db.DB.Query(`SELECT id, floor, ceil, create_at,tax_value FROM public."master_tax_level" ORDER BY floor`)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err // Return the error to be handled by the caller
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        var taxLevels []structs.TaxLevel
+        for rows.Next() </span><span class="cov8" title="1">{
+                var tl structs.TaxLevel
+                if err := rows.Scan(&amp;tl.ID, &amp;tl.Floor, &amp;tl.Ceil, &amp;tl.CreateAt, &amp;tl.TaxValue); err != nil </span><span
+                class="cov8" title="1">{
+                        return nil, err // Return immediately on error
+                }</span>
+                <span class="cov8" title="1">taxLevels = append(taxLevels, tl)</span>
+        }
+
+        <span class="cov8" title="1">if err = rows.Err(); err != nil </span><span class="cov0" title="0">{
+                return nil, err // Handle any errors encountered during iteration
+        }</span>
+
+        <span class="cov8" title="1">return taxLevels, nil</span>
+}
+</pre>
+
+    <pre class="file" id="file18" style="display: none">package model
+
+import (
+        "errors"
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetPersonalDeduct query personal deduct from database
+func SetDonationDeduct(newDonation float64) (float64, error) <span class="cov0" title="0">{
+
+        // Start a transaction
+        tx, err := db.DB.Begin()
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+
+        // Select the current active record
+        <span class="cov0" title="0">var donationDeduct structs.GetTaxDeductStruct
+        err = tx.QueryRow(`SELECT amount_deduct, id, is_active, create_at, version FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'donation'`).Scan(&amp;donationDeduct.PersonalDeduct, &amp;donationDeduct.Id, &amp;donationDeduct.Is_active, &amp;donationDeduct.Create_at, &amp;donationDeduct.Version)
+        if err != nil </span><span class="cov0" title="0">{
+                tx.Rollback()
+                return 0, err
+        }</span>
+
+        <span class="cov0" title="0">maxDonation, _ := GetMaxDonationDeduct()
+        floorDonation, _ := GetFloorDonationDeduct()
+        if newDonation &gt; maxDonation || newDonation &lt; floorDonation </span><span class="cov0" title="0">{
+                return donationDeduct.PersonalDeduct, errors.New("donation is not in maximum or minimum range")
+        }</span>
+
+        // Set the current active record to inactive
+        <span class="cov0" title="0">_, err = tx.Exec(`UPDATE public."master_deduct" SET is_active = FALSE WHERE id = $1`, donationDeduct.Id)
+        if err != nil </span><span class="cov0" title="0">{
+                tx.Rollback()
+                return 0, err
+        }</span>
+
+        // Insert a new record with an incremented version and is_active = TRUE
+        <span class="cov0" title="0">newVersion := donationDeduct.Version + 1
+        _, err = tx.Exec(`INSERT INTO public."master_deduct" (amount_deduct, is_active, type_deduct, version) VALUES ($1, $2 , 'donation', $3)`, newDonation, true, newVersion)
+        if err != nil </span><span class="cov0" title="0">{
+                tx.Rollback()
+                return 0, err
+        }</span>
+
+        // Commit the transaction
+        <span class="cov0" title="0">if err := tx.Commit(); err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+
+        <span class="cov0" title="0">return newDonation, nil</span>
+}
+</pre>
+
+    <pre class="file" id="file19" style="display: none">package model
+
+import (
+        "errors"
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetPersonalDeduct query personal deduct from database
+func SetKReceiptDeduct(kReceiptDeduct float64) (float64, error) <span class="cov0" title="0">{
+
+        // Start a transaction
+        tx, err := db.DB.Begin()
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+
+        // Select the current active record
+        <span class="cov0" title="0">var donationDeduct structs.GetTaxDeductStruct
+        err = tx.QueryRow(`SELECT amount_deduct, id, is_active, create_at, version FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'k-receipt'`).Scan(&amp;donationDeduct.PersonalDeduct, &amp;donationDeduct.Id, &amp;donationDeduct.Is_active, &amp;donationDeduct.Create_at, &amp;donationDeduct.Version)
+        if err != nil </span><span class="cov0" title="0">{
+                tx.Rollback()
+                return 0, err
+        }</span>
+
+        <span class="cov0" title="0">maxKReceipt, _ := GetMaxKReceiptDeduct()
+        floorKReceipt, _ := GetFloorKReceiptDeduct()
+        if kReceiptDeduct &gt; maxKReceipt || kReceiptDeduct &lt; floorKReceipt </span><span class="cov0" title="0">{
+                return donationDeduct.PersonalDeduct, errors.New("donation is not in maximum or minimum range")
+        }</span>
+
+        // Set the current active record to inactive
+        <span class="cov0" title="0">_, err = tx.Exec(`UPDATE public."master_deduct" SET is_active = FALSE WHERE id = $1`, donationDeduct.Id)
+        if err != nil </span><span class="cov0" title="0">{
+                tx.Rollback()
+                return 0, err
+        }</span>
+
+        // Insert a new record with an incremented version and is_active = TRUE
+        <span class="cov0" title="0">newVersion := donationDeduct.Version + 1
+        _, err = tx.Exec(`INSERT INTO public."master_deduct" (amount_deduct, is_active, type_deduct, version) VALUES ($1, $2 , 'k-receipt', $3)`, kReceiptDeduct, true, newVersion)
+        if err != nil </span><span class="cov0" title="0">{
+                tx.Rollback()
+                return 0, err
+        }</span>
+
+        // Commit the transaction
+        <span class="cov0" title="0">if err := tx.Commit(); err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+
+        <span class="cov0" title="0">return kReceiptDeduct, nil</span>
+}
+</pre>
+
+    <pre class="file" id="file20" style="display: none">package model
+
+import (
+        "errors"
+        "github.com/son1122/assessment-tax/db"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// GetPersonalDeduct query personal deduct from database
+func SetPersonalDeduct(kReceiptDeduct float64) (float64, error) <span class="cov0" title="0">{
+
+        // Start a transaction
+        tx, err := db.DB.Begin()
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+
+        // Select the current active record
+        <span class="cov0" title="0">var donationDeduct structs.GetTaxDeductStruct
+        err = tx.QueryRow(`SELECT amount_deduct, id, is_active, create_at, version FROM public."master_deduct" WHERE is_active = TRUE AND type_deduct = 'personal'`).Scan(&amp;donationDeduct.PersonalDeduct, &amp;donationDeduct.Id, &amp;donationDeduct.Is_active, &amp;donationDeduct.Create_at, &amp;donationDeduct.Version)
+        if err != nil </span><span class="cov0" title="0">{
+                tx.Rollback()
+                return 0, err
+        }</span>
+
+        <span class="cov0" title="0">maxKReceipt, _ := GetMaxPersonalDeduct()
+        floorKReceipt, _ := GetFloorPersonalDeduct()
+        if kReceiptDeduct &gt; maxKReceipt || kReceiptDeduct &lt; floorKReceipt </span><span class="cov0" title="0">{
+                return donationDeduct.PersonalDeduct, errors.New("donation is not in maximum or minimum range")
+        }</span>
+
+        // Set the current active record to inactive
+        <span class="cov0" title="0">_, err = tx.Exec(`UPDATE public."master_deduct" SET is_active = FALSE WHERE id = $1`, donationDeduct.Id)
+        if err != nil </span><span class="cov0" title="0">{
+                tx.Rollback()
+                return 0, err
+        }</span>
+
+        // Insert a new record with an incremented version and is_active = TRUE
+        <span class="cov0" title="0">newVersion := donationDeduct.Version + 1
+        _, err = tx.Exec(`INSERT INTO public."master_deduct" (amount_deduct, is_active, type_deduct, version) VALUES ($1, $2 , 'personal', $3)`, kReceiptDeduct, true, newVersion)
+        if err != nil </span><span class="cov0" title="0">{
+                tx.Rollback()
+                return 0, err
+        }</span>
+
+        // Commit the transaction
+        <span class="cov0" title="0">if err := tx.Commit(); err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+
+        <span class="cov0" title="0">return kReceiptDeduct, nil</span>
+}
+</pre>
+
+    <pre class="file" id="file21" style="display: none">package router
+
+import (
+        "github.com/labstack/echo/v4"
+        "github.com/son1122/assessment-tax/controller"
+        "github.com/son1122/assessment-tax/middleware"
+)
+
+func InitRoutes(e *echo.Echo) <span class="cov0" title="0">{
+
+        //TaxCalculation Controller
+        e.POST("/tax/calculations", controller.TaxCalculationPost)
+        e.POST("/tax/calculations/upload-csv", controller.TaxCalculationCSVPost)
+
+        //AdminCalculation Controller
+        adminGroup := e.Group("/admin")
+        adminGroup.Use(middleware.BasicAuthMiddleware)
+        adminGroup.POST("/deductions/k-receipt", controller.AdminDeductionKReceiptAdjust)
+        adminGroup.POST("/deductions/donation", controller.AdminDeductionDonationAdjust)
+        adminGroup.POST("/deductions/personal", controller.AdminDeductionPersonalAdjust)
+}</span>
+</pre>
+
+    <pre class="file" id="file22" style="display: none">package util
+
+import (
+        "bytes"
+        "fmt"
+)
+
+// function to format numbers with commas
+func commaFormat(n int) string <span class="cov8" title="1">{
+        num := fmt.Sprintf("%d", n)
+        var buffer bytes.Buffer
+        minus := ""
+        if num[0] == '-' </span><span class="cov0" title="0">{
+                minus = "-"
+                num = num[1:]
+        }</span>
+        <span class="cov8" title="1">l := len(num)
+        for i, digit := range num </span><span class="cov8" title="1">{
+                if i &gt; 0 &amp;&amp; (l-i)%3 == 0 </span><span class="cov8" title="1">{
+                        buffer.WriteString(",")
+                }</span>
+                <span class="cov8" title="1">buffer.WriteRune(digit)</span>
+        }
+        <span class="cov8" title="1">return minus + buffer.String()</span>
+}
+</pre>
+
+    <pre class="file" id="file23" style="display: none">package util
+
+import (
+        "fmt"
+        "github.com/son1122/assessment-tax/model"
+        "github.com/son1122/assessment-tax/structs"
+)
+
+// TaxCalculationFromTotalIncome Function for calculate tax from total income by using Tax Level From Database from model.GetTaxLevel()
+func TaxCalculationFromTotalIncome(income float64) ([]structs.TaxLevelData, float64) <span class="cov8" title="1">{
+
+        data := []structs.TaxLevelData{}
+
+        taxLevel, _ := model.GetTaxLevel()
+        var tax float64 = 0
+        var incomeValueInLevel float64 = 0
+        //var sum float64 = 0
+        for i := 0; i &lt; len(taxLevel); i++ </span><span class="cov8" title="1">{
+                if i == len(taxLevel)-1 </span><span class="cov8" title="1">{
+                        if income &gt;= float64(taxLevel[i].Floor) </span><span class="cov8" title="1">{
+                                incomeValueInLevel = income - float64(taxLevel[i].Floor)
+                                taxValueInLevel := incomeValueInLevel * float64(taxLevel[i].TaxValue) / 100
+                                tax = tax + taxValueInLevel
+                                data = append(data, structs.TaxLevelData{
+                                        Level: fmt.Sprintf("%s ขึ้นไป", commaFormat(taxLevel[i].Floor+1)),
+                                        Tax:   taxValueInLevel,
+                                })
+                                break</span>
+                        }
+                        <span class="cov8" title="1">data = append(data, structs.TaxLevelData{
+                                Level: fmt.Sprintf("%s ขึ้นไป", commaFormat(taxLevel[i].Floor+1)),
+                                Tax:   0,
+                        })
+                        break</span>
+                }
+                <span class="cov8" title="1">if income &gt;= float64(taxLevel[i].Ceil) </span><span class="cov8"
+                                                                                                    title="1">{
+                        if i &gt; 0 </span><span class="cov8" title="1">{
+                                taxValueInLevel := float64(taxLevel[i].TaxValue) * (float64(taxLevel[i].Ceil) - float64(taxLevel[i-1].Ceil)) / 100
+                                tax = tax + taxValueInLevel
+                                data = append(data, structs.TaxLevelData{
+                                        Level: fmt.Sprintf("%s-%s", commaFormat(taxLevel[i].Floor+1), commaFormat(taxLevel[i].Ceil)),
+                                        Tax:   taxValueInLevel,
+                                })
+                        }</span> else<span class="cov8" title="1"> {
+                                taxValueInLevel := float64(taxLevel[i].TaxValue) * (float64(taxLevel[i].Ceil)) / 100
+                                tax = tax + taxValueInLevel
+                                data = append(data, structs.TaxLevelData{
+                                        Level: fmt.Sprintf("%s-%s", commaFormat(taxLevel[i].Floor), commaFormat(taxLevel[i].Ceil)),
+                                        Tax:   taxValueInLevel,
+                                })
+                        }</span>
+
+                } else<span class="cov8" title="1"> {
+                        if income &lt;= float64(taxLevel[i].Floor) </span><span class="cov8" title="1">{
+                                data = append(data, structs.TaxLevelData{
+                                        Level: fmt.Sprintf("%s-%s", commaFormat(taxLevel[i].Floor+1), commaFormat(taxLevel[i].Ceil)),
+                                        Tax:   0,
+                                })
+                                continue</span>
+                        }
+
+                        <span class="cov8" title="1">incomeValueInLevel = income - float64(taxLevel[i].Floor)
+                        taxValueInLevel := incomeValueInLevel * float64(taxLevel[i].TaxValue) / 100
+                        tax = tax + taxValueInLevel
+                        data = append(data, structs.TaxLevelData{
+                                Level: fmt.Sprintf("%s-%s", commaFormat(taxLevel[i].Floor+1), commaFormat(taxLevel[i].Ceil)),
+                                Tax:   taxValueInLevel,
+                        })
+                        continue</span>
+                }
+
+        }
+
+        <span class="cov8" title="1">return data, tax</span>
+
+}
+</pre>
+
+    <pre class="file" id="file24" style="display: none">package util
+
+import "github.com/go-playground/validator/v10"
+
+type CustomValidator struct {
+        Validator *validator.Validate
+}
+
+// Validate implements echo's validator interface using the go-playground validator.
+func (cv *CustomValidator) Validate(i interface{}) error <span class="cov0" title="0">{
+        return cv.Validator.Struct(i)
+}</span>
+</pre>
+
+</div>
+</body>
+<script>
+    (function () {
+        var files = document.getElementById('files');
+        var visible;
+        files.addEventListener('change', onChange, false);
+
+        function select(part) {
+            if (visible)
+                visible.style.display = 'none';
+            visible = document.getElementById(part);
+            if (!visible)
+                return;
+            files.value = part;
+            visible.style.display = 'block';
+            location.hash = part;
+        }
+
+        function onChange() {
+            select(files.value);
+            window.scrollTo(0, 0);
+        }
+
+        if (location.hash != "") {
+            select(location.hash.substr(1));
+        }
+        if (!visible) {
+            select("file0");
+        }
+    })();
+</script>
+</html>
