@@ -21,9 +21,8 @@ import (
 )
 
 func main() {
-
 	e := echo.New()
-	e.Logger.SetLevel(log.INFO)
+	e.Logger.SetLevel(log.DEBUG)
 
 	constant.InitConfig()
 	cfg := constant.Get()
@@ -50,13 +49,13 @@ func main() {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 	<-quit
+	time.Sleep(5 * time.Second) // Introduces a 5-second delay after Ctrl+C is pressed.
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	if err := e.Shutdown(ctx); err != nil {
 		e.Logger.Fatal("error shutting down the server: ", err)
 	}
-	e.Logger.Info("Server gracefully stopped")
-	fmt.Println("shutting down the server")
 
+	fmt.Println("Shutting down the server")
 }
