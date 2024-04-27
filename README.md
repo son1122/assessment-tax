@@ -1,4 +1,10 @@
-Here's the revised version of your `README.md` with the added instruction for initializing the database:
+### Software Feature
+
+1. **swagger**
+2. **adjustable tax level**
+3. **deduct value with version**
+4. **MVC Style**
+5. **Some Testing**
 
 ---
 
