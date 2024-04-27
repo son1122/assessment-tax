@@ -49,13 +49,19 @@ func main() {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 	<-quit
-	time.Sleep(5 * time.Second) // Introduces a 5-second delay after Ctrl+C is pressed.
+	preShutdownTasks()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	if err := e.Shutdown(ctx); err != nil {
 		e.Logger.Fatal("error shutting down the server: ", err)
 	}
+	fmt.Println("Server has been shut down.")
+}
 
-	fmt.Println("Shutting down the server")
+func preShutdownTasks() {
+	fmt.Println("Running pre-shutdown tasks...")
+	db.CloseDB()
+	time.Sleep(5 * time.Second)
+	fmt.Println("Pre-shutdown tasks complete.")
 }

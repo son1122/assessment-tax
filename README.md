@@ -5,6 +5,7 @@
 3. **deduct value with version**
 4. **MVC Style**
 5. **Some Testing**
+6. **Transaction Update**
 
 ---
 
