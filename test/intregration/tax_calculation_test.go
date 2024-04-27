@@ -55,11 +55,11 @@ func TestTaxCalculationFunction(t *testing.T) {
 	expectedResponse := struc.TaxResponse{
 		TaxRefund: 486000,
 		TaxLevel: []struc.TaxLevelData{
-			{"0 - 150000", 0},
-			{"150000 - 500000", 14000},
-			{"500000 - 1000000", 0},
-			{"1000000 - 2000000", 0},
-			{"2000000 - ขึ้นไป", 0},
+			{"0-150,000", 0},
+			{"150,001-500,000", 14000},
+			{"500,001-1,000,000", 0},
+			{"1,000,001-2,000,000", 0},
+			{"2,000,001 ขึ้นไป", 0},
 		},
 	}
 	if !compareTaxResponses(expectedResponse, actualResponse) {

@@ -44,4 +44,13 @@ func TestSendPostRequest(t *testing.T) {
 	if body != expectedBody {
 		t.Errorf("Expected body '%s', got '%s'", expectedBody, body)
 	}
+	body, err = sendPostRequest("http://localhost:8080/admin/deductions/k-receipt", `{"amount": 50000}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expectedBody = `{"kReceipt":50000}`
+	if body != expectedBody {
+		t.Errorf("Expected body '%s', got '%s'", expectedBody, body)
+	}
 }
