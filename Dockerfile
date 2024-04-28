@@ -1,5 +1,5 @@
 # Use a Go base image that meets the minimum version requirement
-FROM golang:1.22.1-alpine AS builder
+FROM golang:1.21.9-alpine AS builder
 
 # Set the working directory inside the container
 WORKDIR /app

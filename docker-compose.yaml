@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   postgres:
     image: postgres:16
@@ -5,5 +6,20 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: ktaxes
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initdb.d
     ports:
       - '5432:5432'
+
+#  tax-service:
+#    build: .
+#    environment:
+#      DATABASE_URL: 'host=postgres port=5432 user=postgres password=postgres dbname=ktaxes sslmode=disable'
+#      PORT: '8080'
+#      ADMIN_USERNAME: 'adminTax'
+#      ADMIN_PASSWORD: 'admin!'
+#    ports:
+#      - '8080:8080'
+#    restart: unless-stopped
+#    depends_on:
+#      - postgres

@@ -35,7 +35,7 @@ func TaxCalculationPost(c echo.Context) error {
 	err = c.Validate(tax)
 	if err != nil {
 		log.Println(err.Error())
-		return c.JSON(http.StatusInternalServerError, err)
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	deductTypeAndAmount, err := model.GetDeductType()
 	if err != nil {
@@ -80,7 +80,7 @@ func TaxCalculationPost(c echo.Context) error {
 	finalTax := taxCost - tax.Wht
 	log.Println("fin TaxCalculationPost", finalTax)
 	if finalTax >= 0 {
-		taxResponse := struc.TaxResponse{Tax: finalTax, TaxLevel: taxLevelData}
+		taxResponse := struc.TaxResponse{Tax: strconv.FormatFloat(finalTax, 'f', 2, 64), TaxLevel: taxLevelData}
 		return c.JSON(http.StatusOK, taxResponse)
 	} else {
 		taxResponse := struc.TaxResponse{TaxRefund: math.Abs(finalTax), TaxLevel: taxLevelData}
